@@ -40,7 +40,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 
 ## Pendiente
 - [ ] Fotos de Jano (hero, sobre mí y 6 estilos del lookbook).
-- [ ] Número de WhatsApp real.
+- [x] Número de WhatsApp real (+34 659 50 69 79).
 - [ ] Enlace de Calendly/Cal.com.
 - [ ] Precios de los tres servicios.
 - [ ] Testimonios reales de clientes (no inventarlos).

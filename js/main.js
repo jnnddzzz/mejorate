@@ -1,6 +1,6 @@
 // ==== CONFIGURACIÓN: cambia estos valores ====
 const CONFIG = {
-  whatsapp: "34600000000",   // Número con prefijo de país, sin + ni espacios
+  whatsapp: "34659506979",   // Número con prefijo de país, sin + ni espacios
   whatsappMsg: "Hola Jano, quiero mejorar mi imagen y me gustaría información sobre la asesoría.",
   calendly: "",              // p. ej. "https://calendly.com/jjn-dzz/asesoria" (vacío = aviso)
   estilos: ["streetwear", "clásico", "minimal", "old money", "casual"]
