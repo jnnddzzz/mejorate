@@ -5,19 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Mejórate · Asesoría de imagen masculina con jjn.dzz</title>
   <meta name="description" content="Asesor de imagen especializado en hombres. Te ayudo a vestir mejor, y también con colorimetría, corte de pelo, cejas y facciones. Online o en persona. La primera consulta es gratis.">
-  <meta name="theme-color" content="#111111">
+  <meta name="theme-color" content="#060607">
   <meta property="og:title" content="Mejórate · Asesoría de imagen masculina con jjn.dzz">
   <meta property="og:description" content="Te enseño a vestir como el hombre que quieres ser. Primera consulta gratis.">
   <meta property="og:type" content="website">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23111'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia,serif' font-style='italic' font-size='40' fill='%23fff'%3Ej%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <script>document.documentElement.classList.add("js")</script>
 </head>
 <body>
   <div class="progress" aria-hidden="true"></div>
+
+  <!-- STAGE: full-body photos behind the whole site, changing as you scroll -->
+  <div class="stage" id="stage" aria-hidden="true">
+    <div class="stage-layer"><img class="stage-blur" alt=""><img class="stage-photo" alt=""></div>
+    <div class="stage-layer"><img class="stage-blur" alt=""><img class="stage-photo" alt=""></div>
+    <div class="stage-shade"></div>
+    <div class="stage-grid"></div>
+    <div class="stage-grain"></div>
+  </div>
+  <div class="cursor-glow" id="cursor-glow" aria-hidden="true"></div>
+
+  <!-- HUD: which look is on screen -->
+  <div class="hud" id="hud" aria-hidden="true">
+    <span class="hud-dot"></span>
+    <span>LOOK <b id="hud-n">01</b>/<span id="hud-t">00</span></span>
+    <span class="hud-cat" id="hud-cat"></span>
+    <span class="hud-bar"><i id="hud-bar"></i></span>
+  </div>
 
   <!-- NAV -->
   <header class="nav" id="nav">
@@ -65,9 +83,10 @@
           </ul>
         </div>
         <div class="hero-media reveal">
-          <figure class="ph ph-hero">
-            <img src="img/fotos/jano-1676.jpg" alt="Jano Arribas Díaz (jjn.dzz) con camisa negra y pantalón de vestir frente a una pared amarilla" fetchpriority="high">
-          </figure>
+          <div class="ring-wrap">
+            <div class="ring" id="ring"></div>
+            <div class="ring-floor"></div>
+          </div>
           <div class="hero-card">
             <span class="avatar">J</span>
             <div><strong>Jano Arribas Díaz</strong><small>@jjn.dzz · Asesor de imagen masculina</small></div>

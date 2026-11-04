@@ -28,9 +28,11 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Botones de WhatsApp con `wa.me` y mensaje prellenado.
 
 ## Diseño
-- **Blanco y negro editorial**, moderno, limpio, minimalista, tipo revista de moda.
-- Tipografías: Instrument Serif (titulares) + Inter (texto).
-- Tono cercano (tuteo, en primera persona: «Hola, soy Jano»), limpio, dinámico y profesional. Fondo blanco roto, esquinas redondeadas, animaciones suaves.
+- **Inmersivo y futurista** (pedido por Jano tras la primera versión editorial en blanco): fondo oscuro, paneles de cristal ahumado, acento degradado cromado, grano y rejilla sutiles, brillo que sigue al cursor.
+- Las fotos de Jano deben ser dinámicas en todo momento: escenario fijo de fondo con sus fotos a cuerpo entero que cambian al hacer scroll y solas cada ~4 s; anillo 3D de fotos en la portada.
+- Jano **no quiere** la foto de la pared amarilla (`jano-1676`) como foto principal.
+- Tipografías: Instrument Serif (titulares) + Inter (texto) + JetBrains Mono (etiquetas, HUD).
+- Tono cercano (tuteo, en primera persona: «Hola, soy Jano»), sencillo e intuitivo.
 - Fotos de Jano protagonistas (distintos estilos, looks y colores).
 - Marca: se reconoce por **jjn.dzz** y aparece el nombre **Jano Arribas Díaz**.
 
@@ -39,10 +41,10 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Repositorio: `jnnddzzz/mejorate` (antes se planeó como «estetica»).
 - Configuración editable al principio de `js/main.js` (`CONFIG`): WhatsApp, `formEndpoint`, horario y estilos del texto rotatorio.
 - Fotos en `img/fotos/jano-XXXX.jpg` (1400 px) y `img/fotos/thumb/` (420 px). Salen de Google Drive, carpeta «mis fotos» y su subcarpeta «chandalesç».
-- Reglas de fotos (pedidas por Jano): Jano centrado, **nunca cortar cabeza ni zapatos**, y **solo una foto por outfit**. Los recortes solo quitan laterales (proporción 3:5).
-- Portada: `jano-1676`. Sobre mí: `jano-9547`. El resto está en el array `LOOKS` de `js/main.js` con su categoría: streetwear, verano, chandal, arreglado. Al añadir fotos clásicas, crear la categoría «clásico».
+- Reglas de fotos (pedidas por Jano): Jano centrado, **nunca cortar cabeza ni zapatos**, y **solo una foto por outfit**. El centrado se hace con detección de persona (YOLO): los recortes solo quitan laterales, centrados en la caja de la persona (máx. 3:5). Nunca usar `object-fit: cover` con fotos de Jano en marcos de otra proporción.
+- Sin foto fija de portada. Sobre mí: `jano-9547`. El resto está en el array `LOOKS` de `js/main.js` con su categoría: streetwear, verano, chandal, arreglado. Al añadir fotos clásicas, crear la categoría «clásico».
 - Descartadas por outfit repetido: 0629, 5327, 9421, 9738, 8057, 2241. Por calidad: 9065. No descargada (8 MB, demasiado grande para el conector): IMG_0870.JPG.
-- Efectos: carrusel de cápsulas que se desliza con el scroll (`.reel`), burbujas con fotos que aparecen con parallax en los laterales (`.bubbles`) y visor a pantalla completa (lightbox).
+- Efectos: escenario de fondo (`#stage`) con HUD vertical «LOOK 07/33», anillo 3D (`#ring`) que acelera con el scroll, carrusel que se desliza con el scroll (`.reel`), burbujas con parallax (`.bubbles`), lookbook en mosaico con aparición en 3D y visor a pantalla completa (lightbox).
 - Navegación con scroll spy (menú y puntos laterales marcan la sección actual) y barra fija «Consulta gratis» en móvil.
 - Vista previa privada: https://claude.ai/artifact/2FYycAd2ZJYSmznCAxgCzx
 

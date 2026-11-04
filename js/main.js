@@ -103,28 +103,99 @@ const io = new IntersectionObserver(entries => {
 $$(".reveal").forEach(el => io.observe(el));
 
 // ---------- Photos ----------
-// Para añadir una foto: guárdala en img/fotos/ (y una pequeña en img/fotos/thumb/) y añádela aquí.
+// Para añadir una foto: guárdala en img/fotos/ (y una pequeña en img/fotos/thumb/) y añádela aquí
+// con su categoría y su ancho (todas miden 1400 px de alto).
 const CATS = { streetwear: "Streetwear", verano: "Verano", chandal: "Chándal", arreglado: "Arreglado" };
 const LOOKS = [
-  ["2389", "chandal"], ["1810", "streetwear"], ["6100", "arreglado"], ["2074", "verano"],
-  ["4873", "chandal"], ["5430", "streetwear"], ["0412", "arreglado"], ["8663", "verano"],
-  ["2329", "streetwear"], ["0204", "arreglado"], ["9260", "chandal"], ["2657", "verano"],
-  ["5439", "streetwear"], ["8356", "arreglado"], ["8698", "verano"], ["4436", "chandal"],
-  ["3160", "streetwear"], ["0517", "arreglado"], ["9476", "verano"], ["0015", "chandal"],
-  ["9048", "streetwear"], ["6512", "arreglado"], ["2749", "verano"], ["5131", "streetwear"],
-  ["0518", "arreglado"], ["8130", "verano"], ["8808", "streetwear"], ["9773", "verano"],
-  ["2406", "streetwear"], ["0399", "verano"], ["5997", "streetwear"], ["8919", "verano"]
-].map(([id, cat]) => ({ id, cat, src: `img/fotos/jano-${id}.jpg`, thumb: `img/fotos/thumb/jano-${id}.jpg` }));
+  ["1810", "streetwear", 840], ["2389", "chandal", 716], ["2074", "verano", 840], ["1676", "arreglado", 716],
+  ["6100", "arreglado", 840], ["5430", "streetwear", 840], ["4873", "chandal", 840], ["8663", "verano", 840],
+  ["2329", "streetwear", 840], ["0204", "arreglado", 598], ["9260", "chandal", 840], ["2657", "verano", 785],
+  ["5439", "streetwear", 840], ["8356", "arreglado", 840], ["8698", "verano", 840], ["4436", "chandal", 840],
+  ["3160", "streetwear", 840], ["0412", "arreglado", 840], ["9476", "verano", 840], ["0015", "chandal", 971],
+  ["9048", "streetwear", 840], ["6512", "arreglado", 840], ["2749", "verano", 762], ["5131", "streetwear", 840],
+  ["0517", "arreglado", 812], ["8130", "verano", 840], ["8808", "streetwear", 840], ["9773", "verano", 840],
+  ["0518", "arreglado", 840], ["2406", "streetwear", 840], ["0399", "verano", 840], ["5997", "streetwear", 840],
+  ["8919", "verano", 840]
+].map(([id, cat, w]) => ({ id, cat, w, src: `img/fotos/jano-${id}.jpg`, thumb: `img/fotos/thumb/jano-${id}.jpg` }));
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// Stage: full-body photo behind the whole site; it changes as you scroll and on its own every few seconds
+const stage = $("#stage");
+const layers = $$(".stage-layer", stage);
+const hudN = $("#hud-n"), hudCat = $("#hud-cat"), hudBar = $("#hud-bar");
+$("#hud-t").textContent = String(LOOKS.length).padStart(2, "0");
+let stageIdx = -1, stageLayer = 0, scrollIdx = 0, autoOffset = 0, lastScrollAt = 0;
+const preload = i => { const im = new Image(); im.src = LOOKS[i % LOOKS.length].src; };
+const showStage = i => {
+  i = ((i % LOOKS.length) + LOOKS.length) % LOOKS.length;
+  if (i === stageIdx) return;
+  stageIdx = i;
+  const l = LOOKS[i];
+  stageLayer = 1 - stageLayer;
+  const next = layers[stageLayer], prev = layers[1 - stageLayer];
+  const photo = $(".stage-photo", next), blur = $(".stage-blur", next);
+  const swap = () => { next.classList.add("on"); prev.classList.remove("on"); };
+  blur.src = l.thumb;
+  photo.onload = swap;
+  photo.src = l.src;
+  if (photo.complete) swap();
+  hudN.textContent = String(i + 1).padStart(2, "0");
+  hudCat.textContent = CATS[l.cat];
+  preload(i + 1);
+};
+const STEP = () => Math.max(420, innerHeight * .7);
+showStage(0);
+if (!reduceMotion) {
+  setInterval(() => {
+    if (document.hidden || performance.now() - lastScrollAt < 2500) return;
+    autoOffset++;
+    showStage(scrollIdx + autoOffset);
+  }, 3800);
+}
+
+// 3D ring in the hero
+const ring = $("#ring");
+const RING = LOOKS.filter(l => l.w === 840).slice(0, 10);
+const ringH = () => (innerWidth < 900 ? Math.min(190, innerWidth * .42) : Math.min(260, innerHeight * .3));
+const buildRing = () => {
+  const h = ringH(), w = h * .6, n = RING.length;
+  const r = Math.round((w + 14) / (2 * Math.tan(Math.PI / n)));
+  ring.innerHTML = RING.map((l, i) => `<div class="ring-card" style="--h:${h}px;transform:translate(-50%,-50%) rotateY(${(360 / n) * i}deg) translateZ(${r}px)"><img src="${l.thumb}" alt="" width="${Math.round(h * .6)}" height="${h}"></div>`).join("");
+};
+buildRing();
+let ringAngle = 0, ringVel = 0, prevY = scrollY, heroVisible = true;
+new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; }).observe($(".hero"));
+const spin = () => {
+  if (heroVisible) {
+    const dy = scrollY - prevY; prevY = scrollY;
+    ringVel += dy * .03;
+    ringVel *= .92;
+    ringAngle += .12 + ringVel;
+    ring.style.transform = `rotateX(-8deg) rotateY(${ringAngle}deg)`;
+  } else prevY = scrollY;
+  requestAnimationFrame(spin);
+};
+if (reduceMotion) ring.style.transform = "rotateX(-8deg) rotateY(15deg)"; else requestAnimationFrame(spin);
+
+// Cursor glow (desktop)
+const glow = $("#cursor-glow");
+if (matchMedia("(hover: hover)").matches && !reduceMotion) {
+  addEventListener("pointermove", e => {
+    glow.classList.add("on");
+    glow.style.transform = `translate3d(${e.clientX - 260}px, ${e.clientY - 260}px, 0)`;
+  }, { passive: true });
+  document.addEventListener("pointerleave", () => glow.classList.remove("on"));
+}
 
 // Lookbook
 const lookbook = $("#lookbook");
 lookbook.innerHTML = LOOKS.map((l, i) => `
   <button type="button" class="look pop" data-cat="${l.cat}" data-i="${i}" aria-label="Ver look ${CATS[l.cat]} en grande">
-    <img src="${l.src}" alt="Jano con un look ${CATS[l.cat].toLowerCase()}" loading="lazy" width="840" height="1400">
+    <img src="${l.src}" alt="Jano con un look ${CATS[l.cat].toLowerCase()}" loading="lazy" width="${l.w}" height="1400">
     <figcaption>${CATS[l.cat]}</figcaption>
   </button>`).join("");
 const looks = $$(".look", lookbook);
-looks.forEach((el, i) => { el.style.setProperty("--d", `${(i % 4) * 0.07}s`); io.observe(el); });
+looks.forEach((el, i) => { el.style.setProperty("--d", `${(i % 4) * 0.08}s`); io.observe(el); });
 
 $$("#filters .chip").forEach(chip => {
   const f = chip.dataset.filter;
@@ -138,6 +209,12 @@ $$("#filters .chip").forEach(chip => {
   });
 });
 
+// Hovering a look also puts it on the stage behind the page
+lookbook.addEventListener("pointerover", e => {
+  const b = e.target.closest(".look");
+  if (b) { autoOffset = +b.dataset.i - scrollIdx; showStage(+b.dataset.i); }
+});
+
 // Lightbox
 const lb = $("#lightbox");
 const lbImg = $("#lb-img");
@@ -148,7 +225,7 @@ const openLb = i => {
   const l = LOOKS[i];
   lbImg.src = l.src;
   lbImg.alt = `Jano con un look ${CATS[l.cat].toLowerCase()}`;
-  $("#lb-cap").textContent = CATS[l.cat];
+  $("#lb-cap").textContent = `${CATS[l.cat]} · ${String(i + 1).padStart(2, "0")}/${LOOKS.length}`;
   lb.hidden = false;
   document.body.style.overflow = "hidden";
   $("#lb-close").focus();
@@ -180,21 +257,21 @@ addEventListener("keydown", e => {
 // Reel: two rows of photos that slide sideways while scrolling
 const reelA = $("#reel-a"), reelB = $("#reel-b");
 const half = Math.ceil(LOOKS.length / 2);
-const reelHTML = list => list.map(l => `<img src="${l.thumb}" alt="" loading="lazy" width="252" height="420">`).join("");
+const reelHTML = list => list.map(l => `<img src="${l.thumb}" alt="" loading="lazy" width="${Math.round(l.w / 1400 * 480)}" height="480">`).join("");
 reelA.innerHTML = reelHTML([...LOOKS.slice(0, half), ...LOOKS.slice(0, half)]);
 reelB.innerHTML = reelHTML([...LOOKS.slice(half), ...LOOKS.slice(half)]);
 
-// Bubbles: photo capsules at the edges of some sections, appearing and drifting as you scroll
+// Bubbles: full-body capsules at the edges of some sections, appearing and drifting as you scroll
 const SPOTS = [
-  { side: "left", x: "-1%", y: "8%", w: 118, s: .18 }, { side: "right", x: "-1.5%", y: "14%", w: 140, s: -.14 },
-  { side: "left", x: "1%", y: "62%", w: 96, s: -.22 }, { side: "right", x: "1.5%", y: "68%", w: 108, s: .2 }
+  { side: "left", x: "-1%", y: "6%", h: 210, s: .18 }, { side: "right", x: "-1%", y: "12%", h: 250, s: -.14 },
+  { side: "left", x: "1.5%", y: "60%", h: 170, s: -.22 }, { side: "right", x: "2%", y: "66%", h: 190, s: .2 }
 ];
-let pool = 0;
+let pool = 3;
 const bubbleLayers = $$(".bubbles");
 bubbleLayers.forEach(layer => {
   layer.innerHTML = SPOTS.map((p, i) => {
     const l = LOOKS[(pool++ * 7) % LOOKS.length];
-    return `<div class="bubble${i % 3 === 1 ? " hex" : ""}" data-s="${p.s}" style="${p.side}:${p.x};top:${p.y};--w:${p.w}px;transition-delay:${i * .12}s"><img src="${l.thumb}" alt="" loading="lazy"></div>`;
+    return `<div class="bubble" data-s="${p.s}" style="${p.side}:${p.x};top:${p.y};--h:${p.h}px;transition-delay:${i * .12}s"><img src="${l.thumb}" alt="" loading="lazy"></div>`;
   }).join("");
 });
 const bubbleIo = new IntersectionObserver(entries => entries.forEach(e => {
@@ -202,11 +279,15 @@ const bubbleIo = new IntersectionObserver(entries => entries.forEach(e => {
 }), { threshold: .15 });
 bubbleLayers.forEach(l => bubbleIo.observe(l));
 
-const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 let ticking = false;
-const parallax = () => {
+const onFrame = () => {
   ticking = false;
   const vh = innerHeight;
+  // stage follows the scroll
+  const max = document.documentElement.scrollHeight - vh;
+  hudBar.style.height = `${max > 0 ? (scrollY / max) * 100 : 0}%`;
+  const idx = Math.floor(scrollY / STEP());
+  if (idx !== scrollIdx) { scrollIdx = idx; autoOffset = 0; showStage(scrollIdx); }
   [reelA, reelB].forEach(row => {
     const r = row.parentElement.getBoundingClientRect();
     if (r.bottom < 0 || r.top > vh) return;
@@ -221,11 +302,12 @@ const parallax = () => {
     $$(".bubble", layer).forEach(b => b.style.setProperty("--y", `${(mid * +b.dataset.s).toFixed(1)}px`));
   });
 };
-if (!reduceMotion) {
-  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(parallax); } }, { passive: true });
-  addEventListener("resize", parallax);
-}
-parallax();
+addEventListener("scroll", () => {
+  lastScrollAt = performance.now();
+  if (!ticking) { ticking = true; requestAnimationFrame(onFrame); }
+}, { passive: true });
+addEventListener("resize", () => { buildRing(); onFrame(); });
+onFrame();
 
 // ---------- Booking ----------
 const booker = $("#booker");
