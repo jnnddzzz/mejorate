@@ -41,7 +41,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 ## Técnica
 - HTML/CSS/JS estático sin dependencias: `index.html`, `css/styles.css`, `js/main.js`. Apto para GitHub Pages.
 - Repositorio: `jnnddzzz/mejorate` (antes se planeó como «estetica»).
-- Configuración editable al principio de `js/main.js` (`CONFIG`): WhatsApp, `formEndpoint`, horario y estilos del texto rotatorio.
+- Configuración editable al principio de `js/main.js` (`CONFIG`): teléfono (llamadas y WhatsApp), `formEndpoint`, horario y segundos por foto del visor.
 - Fotos en `img/fotos/jano-XXXX.jpg` (1400 px) y `img/fotos/thumb/` (420 px). Salen de Google Drive, carpeta «mis fotos» y su subcarpeta «chandalesç».
 - Reglas de fotos (pedidas por Jano): Jano centrado, **nunca cortar cabeza ni zapatos**, y **solo una foto por outfit**. El centrado se hace con detección de persona (YOLO): los recortes solo quitan laterales, centrados en la caja de la persona (máx. 3:5). Nunca usar `object-fit: cover` con fotos de Jano en marcos de otra proporción.
 - Portada: array `PORTADA` de `js/main.js`. Galería: array `GALERIA` (categorías streetwear, verano, chandal, arreglado). Sobre mí: `jano-9547`. Al añadir fotos clásicas, crear la categoría «clásico» en `CATS`.
