@@ -19,7 +19,7 @@ const CONFIG = {
   diasVista: 21,             // Cuántos días hacia delante se pueden reservar
   avisoMinimoHoras: 3,       // Antelación mínima para reservar
 
-  estilos: ["streetwear", "clásico", "minimal", "old money", "casual"]
+  estilos: ["streetwear", "baggy", "chándal", "arreglado", "clásico"]
 };
 // =============================================
 
@@ -92,7 +92,7 @@ setInterval(() => {
 }, 2400);
 
 // ---------- Reveal on scroll ----------
-$$(".pains, .extra-services, .modes, .steps, .lookbook").forEach(group => {
+$$(".pains, .extra-services, .modes, .steps").forEach(group => {
   [...group.children].forEach((el, i) => el.style.setProperty("--d", `${i * 0.08}s`));
 });
 const io = new IntersectionObserver(entries => {
@@ -102,15 +102,130 @@ const io = new IntersectionObserver(entries => {
 }, { threshold: .12, rootMargin: "0px 0px -40px 0px" });
 $$(".reveal").forEach(el => io.observe(el));
 
-// ---------- Lookbook filters ----------
-$$(".chip").forEach(chip => chip.addEventListener("click", () => {
-  $$(".chip").forEach(c => {
-    c.classList.toggle("active", c === chip);
-    c.setAttribute("aria-pressed", c === chip);
-  });
+// ---------- Photos ----------
+// Para añadir una foto: guárdala en img/fotos/ (y una pequeña en img/fotos/thumb/) y añádela aquí.
+const CATS = { streetwear: "Streetwear", verano: "Verano", chandal: "Chándal", arreglado: "Arreglado" };
+const LOOKS = [
+  ["2389", "chandal"], ["1810", "streetwear"], ["6100", "arreglado"], ["2074", "verano"],
+  ["4873", "chandal"], ["5430", "streetwear"], ["0412", "arreglado"], ["8663", "verano"],
+  ["2329", "streetwear"], ["0204", "arreglado"], ["9260", "chandal"], ["2657", "verano"],
+  ["5439", "streetwear"], ["8356", "arreglado"], ["8698", "verano"], ["4436", "chandal"],
+  ["3160", "streetwear"], ["0517", "arreglado"], ["9476", "verano"], ["0015", "chandal"],
+  ["9048", "streetwear"], ["6512", "arreglado"], ["2749", "verano"], ["5131", "streetwear"],
+  ["0518", "arreglado"], ["8130", "verano"], ["8808", "streetwear"], ["9773", "verano"],
+  ["2406", "streetwear"], ["0399", "verano"], ["5997", "streetwear"], ["8919", "verano"]
+].map(([id, cat]) => ({ id, cat, src: `img/fotos/jano-${id}.jpg`, thumb: `img/fotos/thumb/jano-${id}.jpg` }));
+
+// Lookbook
+const lookbook = $("#lookbook");
+lookbook.innerHTML = LOOKS.map((l, i) => `
+  <button type="button" class="look pop" data-cat="${l.cat}" data-i="${i}" aria-label="Ver look ${CATS[l.cat]} en grande">
+    <img src="${l.src}" alt="Jano con un look ${CATS[l.cat].toLowerCase()}" loading="lazy" width="840" height="1400">
+    <figcaption>${CATS[l.cat]}</figcaption>
+  </button>`).join("");
+const looks = $$(".look", lookbook);
+looks.forEach((el, i) => { el.style.setProperty("--d", `${(i % 4) * 0.07}s`); io.observe(el); });
+
+$$("#filters .chip").forEach(chip => {
   const f = chip.dataset.filter;
-  $$(".look").forEach(look => look.classList.toggle("hide", f !== "all" && look.dataset.cat !== f));
-}));
+  chip.querySelector("span").textContent = f === "all" ? LOOKS.length : LOOKS.filter(l => l.cat === f).length;
+  chip.addEventListener("click", () => {
+    $$("#filters .chip").forEach(c => {
+      c.classList.toggle("active", c === chip);
+      c.setAttribute("aria-pressed", c === chip);
+    });
+    looks.forEach(el => el.classList.toggle("hide", f !== "all" && el.dataset.cat !== f));
+  });
+});
+
+// Lightbox
+const lb = $("#lightbox");
+const lbImg = $("#lb-img");
+let lbIndex = 0;
+const visibleLooks = () => looks.filter(el => !el.classList.contains("hide")).map(el => +el.dataset.i);
+const openLb = i => {
+  lbIndex = i;
+  const l = LOOKS[i];
+  lbImg.src = l.src;
+  lbImg.alt = `Jano con un look ${CATS[l.cat].toLowerCase()}`;
+  $("#lb-cap").textContent = CATS[l.cat];
+  lb.hidden = false;
+  document.body.style.overflow = "hidden";
+  $("#lb-close").focus();
+};
+const closeLb = () => {
+  lb.hidden = true;
+  document.body.style.overflow = "";
+  looks[lbIndex].focus({ preventScroll: true });
+};
+const stepLb = dir => {
+  const v = visibleLooks();
+  openLb(v[(v.indexOf(lbIndex) + dir + v.length) % v.length]);
+};
+lookbook.addEventListener("click", e => {
+  const b = e.target.closest(".look");
+  if (b) openLb(+b.dataset.i);
+});
+$("#lb-close").addEventListener("click", closeLb);
+$("#lb-prev").addEventListener("click", () => stepLb(-1));
+$("#lb-next").addEventListener("click", () => stepLb(1));
+lb.addEventListener("click", e => { if (e.target === lb) closeLb(); });
+addEventListener("keydown", e => {
+  if (lb.hidden) return;
+  if (e.key === "Escape") closeLb();
+  if (e.key === "ArrowLeft") stepLb(-1);
+  if (e.key === "ArrowRight") stepLb(1);
+});
+
+// Reel: two rows of photos that slide sideways while scrolling
+const reelA = $("#reel-a"), reelB = $("#reel-b");
+const half = Math.ceil(LOOKS.length / 2);
+const reelHTML = list => list.map(l => `<img src="${l.thumb}" alt="" loading="lazy" width="252" height="420">`).join("");
+reelA.innerHTML = reelHTML([...LOOKS.slice(0, half), ...LOOKS.slice(0, half)]);
+reelB.innerHTML = reelHTML([...LOOKS.slice(half), ...LOOKS.slice(half)]);
+
+// Bubbles: photo capsules at the edges of some sections, appearing and drifting as you scroll
+const SPOTS = [
+  { side: "left", x: "-1%", y: "8%", w: 118, s: .18 }, { side: "right", x: "-1.5%", y: "14%", w: 140, s: -.14 },
+  { side: "left", x: "1%", y: "62%", w: 96, s: -.22 }, { side: "right", x: "1.5%", y: "68%", w: 108, s: .2 }
+];
+let pool = 0;
+const bubbleLayers = $$(".bubbles");
+bubbleLayers.forEach(layer => {
+  layer.innerHTML = SPOTS.map((p, i) => {
+    const l = LOOKS[(pool++ * 7) % LOOKS.length];
+    return `<div class="bubble${i % 3 === 1 ? " hex" : ""}" data-s="${p.s}" style="${p.side}:${p.x};top:${p.y};--w:${p.w}px;transition-delay:${i * .12}s"><img src="${l.thumb}" alt="" loading="lazy"></div>`;
+  }).join("");
+});
+const bubbleIo = new IntersectionObserver(entries => entries.forEach(e => {
+  if (e.isIntersecting) $$(".bubble", e.target).forEach(b => b.classList.add("in"));
+}), { threshold: .15 });
+bubbleLayers.forEach(l => bubbleIo.observe(l));
+
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
+let ticking = false;
+const parallax = () => {
+  ticking = false;
+  const vh = innerHeight;
+  [reelA, reelB].forEach(row => {
+    const r = row.parentElement.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > vh) return;
+    const shift = (vh - r.top) * +row.dataset.speed;
+    const base = row === reelB ? -row.scrollWidth / 2 + innerWidth : 0;
+    row.style.transform = `translate3d(${base + shift}px,0,0)`;
+  });
+  bubbleLayers.forEach(layer => {
+    const r = layer.getBoundingClientRect();
+    if (r.bottom < 0 || r.top > vh) return;
+    const mid = r.top + r.height / 2 - vh / 2;
+    $$(".bubble", layer).forEach(b => b.style.setProperty("--y", `${(mid * +b.dataset.s).toFixed(1)}px`));
+  });
+};
+if (!reduceMotion) {
+  addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(parallax); } }, { passive: true });
+  addEventListener("resize", parallax);
+}
+parallax();
 
 // ---------- Booking ----------
 const booker = $("#booker");

@@ -38,13 +38,17 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - HTML/CSS/JS estático sin dependencias: `index.html`, `css/styles.css`, `js/main.js`. Apto para GitHub Pages.
 - Repositorio: `jnnddzzz/mejorate` (antes se planeó como «estetica»).
 - Configuración editable al principio de `js/main.js` (`CONFIG`): WhatsApp, `formEndpoint`, horario y estilos del texto rotatorio.
-- Fotos en `img/`. Los huecos son `<figure class="ph … empty">`; para poner una foto, añadir `<img src="img/…" alt="…">` dentro y quitar la clase `empty`.
-- Lookbook filtrable por `data-cat` (urbano, elegante, diario).
+- Fotos en `img/fotos/jano-XXXX.jpg` (1400 px) y `img/fotos/thumb/` (420 px). Salen de Google Drive, carpeta «mis fotos» y su subcarpeta «chandalesç».
+- Reglas de fotos (pedidas por Jano): Jano centrado, **nunca cortar cabeza ni zapatos**, y **solo una foto por outfit**. Los recortes solo quitan laterales (proporción 3:5).
+- Portada: `jano-1676`. Sobre mí: `jano-9547`. El resto está en el array `LOOKS` de `js/main.js` con su categoría: streetwear, verano, chandal, arreglado. Al añadir fotos clásicas, crear la categoría «clásico».
+- Descartadas por outfit repetido: 0629, 5327, 9421, 9738, 8057, 2241. Por calidad: 9065. No descargada (8 MB, demasiado grande para el conector): IMG_0870.JPG.
+- Efectos: carrusel de cápsulas que se desliza con el scroll (`.reel`), burbujas con fotos que aparecen con parallax en los laterales (`.bubbles`) y visor a pantalla completa (lightbox).
 - Navegación con scroll spy (menú y puntos laterales marcan la sección actual) y barra fija «Consulta gratis» en móvil.
 - Vista previa privada: https://claude.ai/artifact/2FYycAd2ZJYSmznCAxgCzx
 
 ## Pendiente
-- [ ] Fotos de Jano (hero, sobre mí y 6 estilos del lookbook).
+- [x] Fotos de Jano de Drive (34 looks).
+- [ ] Fotos de estilo clásico (Jano las subirá).
 - [x] Número de WhatsApp real (+34 659 50 69 79).
 - [ ] Activar guardado de reservas (`formEndpoint`, ver `RESERVAS.md`).
 - [ ] Confirmar horario real de consultas.
