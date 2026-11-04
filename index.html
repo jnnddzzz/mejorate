@@ -118,24 +118,29 @@
       </div>
     </section>
 
-    <!-- STYLES -->
-    <section class="section" id="estilos">
-      <div class="wrap">
-        <div class="head head-row reveal">
-          <div>
-            <p class="eyebrow">Estilos</p>
-            <h2 class="title">Cada cuerpo, <em>su estilo.</em></h2>
+    <!-- STYLES: the section pins while you scroll and the photos glide sideways -->
+    <section class="styles" id="estilos">
+      <div class="styles-pin" id="styles-pin">
+        <div class="styles-sticky">
+          <div class="wrap">
+            <div class="head head-row reveal">
+              <div>
+                <p class="eyebrow">Estilos</p>
+                <h2 class="title">Cada cuerpo, <em>su estilo.</em></h2>
+              </div>
+              <div class="filters" id="filters" role="tablist" aria-label="Elegir estilo"></div>
+            </div>
           </div>
-          <div class="filters" id="filters" role="tablist" aria-label="Elegir estilo"></div>
-        </div>
-      </div>
-      <div class="gallery-wrap reveal">
-        <div class="gallery" id="gallery" tabindex="0" aria-label="Looks del estilo elegido"></div>
-        <div class="wrap gallery-nav">
-          <span class="gallery-count" id="gallery-count"></span>
-          <div class="gallery-arrows">
-            <button type="button" id="gal-prev" aria-label="Anterior">←</button>
-            <button type="button" id="gal-next" aria-label="Siguiente">→</button>
+          <div class="gallery-wrap">
+            <div class="gallery" id="gallery" aria-label="Looks del estilo elegido"><div class="gallery-track" id="gallery-track"></div></div>
+            <div class="wrap gallery-nav">
+              <span class="gallery-count" id="gallery-count"></span>
+              <span class="gallery-bar" aria-hidden="true"><i id="gallery-bar"></i></span>
+              <div class="gallery-arrows">
+                <button type="button" id="gal-prev" aria-label="Anterior">←</button>
+                <button type="button" id="gal-next" aria-label="Siguiente">→</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

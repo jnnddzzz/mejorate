@@ -46,7 +46,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Reglas de fotos (pedidas por Jano): Jano centrado, **nunca cortar cabeza ni zapatos**, y **solo una foto por outfit**. El centrado se hace con detección de persona (YOLO): los recortes solo quitan laterales, centrados en la caja de la persona (máx. 3:5). Nunca usar `object-fit: cover` con fotos de Jano en marcos de otra proporción.
 - Portada: array `PORTADA` de `js/main.js`. Galería: array `GALERIA` (categorías streetwear, verano, chandal, arreglado). Sobre mí: `jano-9547`. Al añadir fotos clásicas, crear la categoría «clásico» en `CATS`.
 - Descartadas por outfit repetido: 0629, 5327, 9421, 9738, 8057, 2241. Por calidad: 9065. No descargada (8 MB, demasiado grande para el conector): IMG_0870.JPG.
-- Efectos: visor de historias en la portada (`#viewer`), galería horizontal con filtros (`#gallery`), visor a pantalla completa (lightbox), apariciones suaves al hacer scroll y scroll spy en el menú.
+- Efectos: visor de historias en la portada (`#viewer`), galería de estilos fijada al scroll: al bajar, las fotos se desplazan en horizontal y la central destaca (`#styles-pin`, `#gallery-track`), visor a pantalla completa (lightbox), apariciones suaves al hacer scroll y scroll spy en el menú.
 - Vista previa privada: https://claude.ai/artifact/2FYycAd2ZJYSmznCAxgCzx
 
 ## Pendiente

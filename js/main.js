@@ -130,41 +130,99 @@ viewer.addEventListener("pointerleave", () => viewer.classList.remove("paused"))
 document.addEventListener("visibilitychange", () => viewer.classList.toggle("paused", document.hidden));
 show(0);
 
-// ---------- Styles gallery: one category at a time ----------
+// ---------- Styles gallery: pinned section, the photos glide sideways as you scroll ----------
+const pin = $("#styles-pin");
 const gallery = $("#gallery");
+const track = $("#gallery-track");
 const filters = $("#filters");
+const galBar = $("#gallery-bar");
+const pinned = !reduceMotion;
+if (!pinned) document.documentElement.classList.add("no-pin");
 let activeCat = "streetwear";
 let galItems = [];
+let looksEls = [];
+let travel = 0;            // how far the track moves sideways, in px
+let galProgress = 0;
+
 filters.innerHTML = Object.entries(CATS).map(([k, v]) =>
   `<button type="button" class="chip" role="tab" data-cat="${k}" aria-selected="${k === activeCat}">${v}</button>`).join("");
-const updateGalNav = () => {
-  const max = gallery.scrollWidth - gallery.clientWidth - 4;
-  $("#gal-prev").disabled = gallery.scrollLeft <= 4;
-  $("#gal-next").disabled = gallery.scrollLeft >= max;
-  $("#gallery-count").textContent = `${CATS[activeCat].toUpperCase()} · ${galItems.length} LOOKS`;
+
+const updateGallery = () => {
+  if (!pinned) {
+    const max = gallery.scrollWidth - gallery.clientWidth - 4;
+    $("#gal-prev").disabled = gallery.scrollLeft <= 4;
+    $("#gal-next").disabled = gallery.scrollLeft >= max;
+    galBar.style.width = `${max > 0 ? (gallery.scrollLeft / max) * 100 : 100}%`;
+    return;
+  }
+  const r = pin.getBoundingClientRect();
+  galProgress = travel > 0 ? Math.min(1, Math.max(0, -r.top / travel)) : 0;
+  track.style.transform = `translate3d(${-galProgress * travel}px,0,0)`;
+  galBar.style.width = `${travel > 0 ? galProgress * 100 : 100}%`;
+  $("#gal-prev").disabled = galProgress <= .001;
+  $("#gal-next").disabled = galProgress >= .999;
+  // depth: the photo nearest the centre is full size, the rest step back
+  const mid = innerWidth / 2;
+  let best = null, bestD = Infinity;
+  looksEls.forEach(el => {
+    const b = el.getBoundingClientRect();
+    const off = (b.left + b.width / 2 - mid) / innerWidth;
+    const k = Math.min(1, Math.abs(off) * 1.6);
+    el.style.transform = `perspective(1200px) rotateY(${(off * -10).toFixed(2)}deg) scale(${(1 - k * .14).toFixed(3)})`;
+    el.style.opacity = (1 - k * .55).toFixed(3);
+    el.style.filter = `brightness(${(1 - k * .35).toFixed(3)})`;
+    if (Math.abs(off) < bestD) { bestD = Math.abs(off); best = el; }
+  });
+  looksEls.forEach(el => el.classList.toggle("center", el === best));
 };
+
+const layoutGallery = () => {
+  if (!pinned) return updateGallery();
+  travel = Math.max(0, track.scrollWidth - innerWidth);
+  pin.style.height = `${innerHeight + travel}px`;
+  updateGallery();
+};
+
 const renderGallery = () => {
   galItems = GALERIA.filter(l => l.cat === activeCat);
-  gallery.innerHTML = galItems.map((l, i) => `
-    <button type="button" class="look" data-i="${i}" style="--d:${Math.min(i, 5) * .06}s;aspect-ratio:${l.w}/1400" aria-label="Ver look ${i + 1} en grande">
+  track.innerHTML = galItems.map((l, i) => `
+    <button type="button" class="look" data-i="${i}" style="aspect-ratio:${l.w}/1400" aria-label="Ver look ${i + 1} en grande">
       <img src="${l.src}" alt="Jano con un look ${CATS[l.cat].toLowerCase()}" loading="lazy" width="${l.w}" height="1400">
       <figcaption>${String(i + 1).padStart(2, "0")}</figcaption>
     </button>`).join("");
+  looksEls = $$(".look", track);
+  $("#gallery-count").textContent = `${CATS[activeCat].toUpperCase()} · ${galItems.length} LOOKS`;
   gallery.scrollLeft = 0;
-  updateGalNav();
+  layoutGallery();
 };
+
 filters.addEventListener("click", e => {
   const c = e.target.closest(".chip");
   if (!c || c.dataset.cat === activeCat) return;
   activeCat = c.dataset.cat;
   $$(".chip", filters).forEach(b => b.setAttribute("aria-selected", b === c));
   renderGallery();
+  // start the new style from its first photo
+  if (pinned) scrollTo({ top: pin.getBoundingClientRect().top + scrollY, behavior: "smooth" });
 });
-const step = () => (gallery.querySelector(".look")?.offsetWidth || 300) + 16;
-$("#gal-prev").addEventListener("click", () => gallery.scrollBy({ left: -step() }));
-$("#gal-next").addEventListener("click", () => gallery.scrollBy({ left: step() }));
-gallery.addEventListener("scroll", updateGalNav, { passive: true });
-addEventListener("resize", updateGalNav);
+
+const cardStep = () => (looksEls[0]?.offsetWidth || 300) + 20;
+const moveGallery = dir => {
+  if (!pinned) return gallery.scrollBy({ left: dir * cardStep(), behavior: "smooth" });
+  // inside the pinned section, sideways distance maps 1:1 to scroll distance
+  scrollBy({ top: dir * cardStep(), behavior: "smooth" });
+};
+$("#gal-prev").addEventListener("click", () => moveGallery(-1));
+$("#gal-next").addEventListener("click", () => moveGallery(1));
+gallery.addEventListener("scroll", updateGallery, { passive: true });
+let galTick = false;
+addEventListener("scroll", () => {
+  if (galTick) return;
+  galTick = true;
+  requestAnimationFrame(() => { galTick = false; updateGallery(); });
+}, { passive: true });
+addEventListener("resize", layoutGallery);
+addEventListener("load", layoutGallery);
 renderGallery();
 
 // Lightbox
@@ -184,7 +242,7 @@ const openLb = i => {
 const closeLb = () => {
   lb.hidden = true;
   document.body.style.overflow = "";
-  gallery.querySelector(`[data-i="${lbIndex}"]`)?.focus({ preventScroll: true });
+  track.querySelector(`[data-i="${lbIndex}"]`)?.focus({ preventScroll: true });
 };
 gallery.addEventListener("click", e => {
   const b = e.target.closest(".look");
