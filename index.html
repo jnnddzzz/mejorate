@@ -2,12 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mejórate · Asesoría de imagen masculina con jjn.dzz</title>
-  <meta name="description" content="Asesor de imagen especializado en hombres. Te ayudo a vestir mejor, y también con colorimetría, corte de pelo, cejas y facciones. Online o en persona. La primera consulta es gratis.">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mejórate · Asesoría de imagen con jjn.dzz</title>
+  <meta name="description" content="Asesoría de imagen con Jano Arribas Díaz (jjn.dzz). Estudio tu cuerpo y tu cara para encontrar la ropa, el corte de pelo y los colores que mejor te sientan. Primera consulta gratis, online o en persona en Cádiz.">
   <meta name="theme-color" content="#060607">
-  <meta property="og:title" content="Mejórate · Asesoría de imagen masculina con jjn.dzz">
-  <meta property="og:description" content="Te enseño a vestir como el hombre que quieres ser. Primera consulta gratis.">
+  <meta property="og:title" content="Mejórate · Asesoría de imagen con jjn.dzz">
+  <meta property="og:description" content="Saca el máximo partido a tu imagen. Primera consulta gratis.">
   <meta property="og:type" content="website">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23111'/%3E%3Ctext x='50%25' y='54%25' text-anchor='middle' dominant-baseline='middle' font-family='Georgia,serif' font-style='italic' font-size='40' fill='%23fff'%3Ej%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,24 +18,7 @@
 </head>
 <body>
   <div class="progress" aria-hidden="true"></div>
-
-  <!-- STAGE: full-body photos behind the whole site, changing as you scroll -->
-  <div class="stage" id="stage" aria-hidden="true">
-    <div class="stage-layer"><img class="stage-blur" alt=""><img class="stage-photo" alt=""></div>
-    <div class="stage-layer"><img class="stage-blur" alt=""><img class="stage-photo" alt=""></div>
-    <div class="stage-shade"></div>
-    <div class="stage-grid"></div>
-    <div class="stage-grain"></div>
-  </div>
-  <div class="cursor-glow" id="cursor-glow" aria-hidden="true"></div>
-
-  <!-- HUD: which look is on screen -->
-  <div class="hud" id="hud" aria-hidden="true">
-    <span class="hud-dot"></span>
-    <span>LOOK <b id="hud-n">01</b>/<span id="hud-t">00</span></span>
-    <span class="hud-cat" id="hud-cat"></span>
-    <span class="hud-bar"><i id="hud-bar"></i></span>
-  </div>
+  <div class="ambient" aria-hidden="true"></div>
 
   <!-- NAV -->
   <header class="nav" id="nav">
@@ -43,26 +26,15 @@
       <a href="#inicio" class="logo">jjn<span>.</span>dzz</a>
       <nav class="menu" id="menu" aria-label="Principal">
         <a href="#que-hago" data-spy>Qué hago</a>
-        <a href="#como-trabajo" data-spy>Cómo trabajo</a>
+        <a href="#como-funciona" data-spy>Cómo funciona</a>
         <a href="#estilos" data-spy>Estilos</a>
         <a href="#sobre-mi" data-spy>Sobre mí</a>
-        <a href="#dudas" data-spy>Dudas</a>
-        <a href="#reservar" class="btn btn-dark menu-cta">Consulta gratis</a>
+        <a href="#" class="menu-call" data-call>Llamar</a>
+        <a href="#reservar" class="btn btn-light menu-cta">Reservar cita</a>
       </nav>
       <button class="burger" id="burger" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
     </div>
   </header>
-
-  <!-- Side scroll index (desktop) -->
-  <nav class="dots" aria-label="Secciones">
-    <a href="#inicio" data-spy data-label="Inicio"></a>
-    <a href="#que-hago" data-spy data-label="Qué hago"></a>
-    <a href="#como-trabajo" data-spy data-label="Cómo trabajo"></a>
-    <a href="#estilos" data-spy data-label="Estilos"></a>
-    <a href="#sobre-mi" data-spy data-label="Sobre mí"></a>
-    <a href="#reservar" data-spy data-label="Reservar"></a>
-    <a href="#dudas" data-spy data-label="Dudas"></a>
-  </nav>
 
   <main>
     <!-- HERO -->
@@ -70,169 +42,116 @@
       <div class="wrap hero-grid">
         <div class="hero-copy">
           <p class="pill reveal"><span class="dot"></span> Primera consulta <strong>gratis</strong></p>
-          <h1 class="reveal">Te enseño a vestir como el hombre que <em>quieres ser.</em></h1>
-          <p class="lead reveal">Soy Jano, asesor de imagen especializado en hombres. Mi fuerte es la ropa, y también te ayudo con colorimetría, corte de pelo, cejas y facciones. Para que te veas bien con tu estilo: <span class="rotator" id="rotator">streetwear</span>.</p>
+          <h1 class="reveal">Saca el máximo partido a <em>tu imagen.</em></h1>
+          <p class="lead reveal">Soy Jano, asesor de imagen. Estudio tu forma de cuerpo y tu cara para encontrar los cortes de ropa, el corte de pelo y los colores que mejor te sientan, sea cual sea tu estilo.</p>
           <div class="actions reveal">
-            <a href="#reservar" class="btn btn-dark">Reservar consulta gratis <span class="arrow">→</span></a>
-            <a href="#" class="btn btn-line" data-wa>Escribirme por WhatsApp</a>
+            <a href="#reservar" class="btn btn-light">Reservar consulta gratis <span class="arrow">→</span></a>
+            <a href="#" class="btn btn-line" data-call>Llamar ahora</a>
           </div>
           <ul class="facts reveal">
             <li><strong>Gratis</strong>la primera consulta</li>
-            <li><strong>20 min</strong>para contarme qué necesitas</li>
-            <li><strong>Online</strong>o en persona si estás cerca</li>
+            <li><strong>Online</strong>desde cualquier sitio</li>
+            <li><strong>Cádiz</strong>en persona</li>
           </ul>
         </div>
-        <div class="hero-media reveal">
-          <div class="ring-wrap">
-            <div class="ring" id="ring"></div>
-            <div class="ring-floor"></div>
+
+        <div class="viewer reveal" id="viewer" aria-roledescription="carrusel" aria-label="Algunos de mis looks">
+          <div class="viewer-bars" id="viewer-bars"></div>
+          <div class="viewer-frame" id="viewer-frame"></div>
+          <div class="viewer-meta">
+            <span class="viewer-tag" id="viewer-tag"></span>
+            <span class="viewer-count" id="viewer-count"></span>
           </div>
-          <div class="hero-card">
-            <span class="avatar">J</span>
-            <div><strong>Jano Arribas Díaz</strong><small>@jjn.dzz · Asesor de imagen masculina</small></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="marquee" aria-hidden="true">
-      <div class="track">
-        <span>Vestimenta</span><span>Personal shopper</span><span>Colorimetría</span><span>Corte de pelo</span><span>Cejas</span><span>Facciones</span><span>Fondo de armario</span><span>Proporciones</span>
-        <span>Vestimenta</span><span>Personal shopper</span><span>Colorimetría</span><span>Corte de pelo</span><span>Cejas</span><span>Facciones</span><span>Fondo de armario</span><span>Proporciones</span>
-      </div>
-    </div>
-
-
-    <!-- SCROLL GALLERY: two rows that slide sideways as you scroll -->
-    <section class="reel" aria-label="Algunos de mis looks">
-      <div class="reel-row" data-speed="-0.35" id="reel-a"></div>
-      <div class="reel-row" data-speed="0.35" id="reel-b"></div>
-    </section>
-
-    <!-- PROBLEM -->
-    <section class="section has-bubbles">
-      <div class="bubbles" aria-hidden="true"></div>
-      <div class="wrap split">
-        <div class="reveal">
-          <p class="eyebrow">¿Te pasa esto?</p>
-          <h2 class="title">Sabes que puedes verte <em>mejor.</em> Solo te falta saber cómo.</h2>
-          <p class="muted">No necesitas otro cuerpo ni gastarte un dineral. Necesitas a alguien que te diga con sinceridad qué te queda bien. Ese soy yo.</p>
-        </div>
-        <div class="pains">
-          <div class="pain reveal">Abro el armario y no sé qué ponerme.</div>
-          <div class="pain reveal">En la tienda me queda bien y en casa no.</div>
-          <div class="pain reveal">Salgo de la peluquería igual o peor.</div>
-          <div class="pain reveal">No sé qué colores me favorecen.</div>
+          <button type="button" class="viewer-hit prev" id="viewer-prev" aria-label="Look anterior"></button>
+          <button type="button" class="viewer-hit next" id="viewer-next" aria-label="Look siguiente"></button>
         </div>
       </div>
     </section>
 
     <!-- WHAT I DO -->
-    <section class="section dark" id="que-hago">
+    <section class="section" id="que-hago">
       <div class="wrap">
         <div class="head reveal">
           <p class="eyebrow">Qué hago</p>
-          <h2 class="title">Especialista en <em>imagen masculina.</em></h2>
-          <p class="muted head-sub">Trabajo solo con hombres. Conozco vuestros cuerpos, vuestras dudas y lo que de verdad funciona.</p>
+          <h2 class="title">Tu imagen, <em>a tu medida.</em></h2>
+          <p class="head-sub muted">La moda no tiene reglas. Lo que sí hay es ropa, cortes y colores que favorecen más a tu cuerpo y a tu cara. Te ayudo a encontrarlos.</p>
         </div>
         <div class="services">
           <article class="main-service reveal">
             <p class="badge">Mi especialidad</p>
             <h3>Vestimenta</h3>
-            <p>Te ayudo a vestir bien según tu cuerpo, tu edad, tu estilo y tu bolsillo.</p>
-            <ul class="checks">
-              <li>Outfits que favorecen tu altura y complexión</li>
-              <li>Tallas, cortes y prendas que te sientan bien</li>
-              <li>Un fondo de armario fácil de combinar</li>
-              <li>Qué comprar, dónde y qué dejar de ponerte</li>
-            </ul>
+            <p>Qué prendas, cortes y tallas sacan lo mejor de tu forma de cuerpo, con tu estilo y tu presupuesto.</p>
           </article>
-          <div class="extra-services">
-            <p class="extra-label reveal">También te ayudo con</p>
-            <article class="extra reveal"><h3>Colorimetría</h3><p>Los colores que te iluminan según tu piel, tu pelo y tus ojos.</p></article>
-            <article class="extra reveal"><h3>Corte de pelo y barba</h3><p>El corte que va con la forma de tu cara y tu día a día.</p></article>
-            <article class="extra reveal"><h3>Cejas</h3><p>Cómo arreglarlas según tu cara para que la mirada cambie.</p></article>
-            <article class="extra reveal"><h3>Facciones</h3><p>Cómo equilibrar tus rasgos con pelo, barba, gafas y accesorios.</p></article>
-          </div>
+          <ul class="extras reveal">
+            <li><h3>Colorimetría</h3><p>Los colores que te iluminan según tu piel, tu pelo y tus ojos.</p></li>
+            <li><h3>Corte de pelo y barba</h3><p>El corte que mejor va con la forma de tu cara.</p></li>
+            <li><h3>Cejas y facciones</h3><p>Cómo equilibrar tus rasgos para que la cara gane.</p></li>
+          </ul>
         </div>
       </div>
     </section>
 
-    <!-- HOW I WORK -->
-    <section class="section has-bubbles" id="como-trabajo">
-      <div class="bubbles" aria-hidden="true"></div>
+    <!-- HOW IT WORKS -->
+    <section class="section" id="como-funciona">
       <div class="wrap">
         <div class="head reveal">
-          <p class="eyebrow">Cómo trabajo</p>
-          <h2 class="title">Mi tiempo, <em>dedicado a ti.</em></h2>
-          <p class="muted head-sub">Elige cómo prefieres que te ayude. Antes de nada, hablamos gratis para ver qué necesitas.</p>
+          <p class="eyebrow">Cómo funciona</p>
+          <h2 class="title">Tres pasos. <em>Sin complicaciones.</em></h2>
         </div>
+        <ol class="steps">
+          <li class="reveal"><span>01</span><h3>Reservas tu cita gratis</h3><p>Eliges día y hora en el calendario, o me llamas.</p></li>
+          <li class="reveal"><span>02</span><h3>Hablamos</h3><p>Me cuentas qué quieres mejorar y vemos cómo te puedo ayudar.</p></li>
+          <li class="reveal"><span>03</span><h3>Te asesoro</h3><p>Online o en persona, me encargo de que saques tu mejor versión.</p></li>
+        </ol>
         <div class="modes">
           <article class="mode reveal">
-            <span class="mode-tag">Desde cualquier sitio</span>
+            <p class="mode-tag">Desde cualquier sitio</p>
             <h3>Online</h3>
-            <p>Asesoría personalizada por videollamada y seguimiento por WhatsApp. Me mandas fotos, te analizo y te digo qué cambiar.</p>
-            <ul class="checks">
-              <li>Videollamada 1 a 1 conmigo</li>
-              <li>Fotos de tus outfits y del probador</li>
-              <li>Resumen con tus recomendaciones</li>
-            </ul>
+            <p class="muted">Videollamada y seguimiento por WhatsApp.</p>
           </article>
           <article class="mode reveal">
-            <span class="mode-tag">Si vives en mi zona</span>
+            <p class="mode-tag">Solo en Cádiz</p>
             <h3>En persona</h3>
-            <p>Quedamos y vamos de compras juntos. Te acompaño, te pruebas la ropa y elegimos lo que de verdad te queda bien.</p>
-            <ul class="checks">
-              <li>Personal shopper: compras conmigo</li>
-              <li>Revisión de tu armario</li>
-              <li>Te ayudo a explicarle al peluquero qué corte pedir</li>
-            </ul>
+            <p class="muted">Vamos de compras juntos y revisamos tu armario.</p>
           </article>
         </div>
-
-        <ol class="steps">
-          <li class="reveal"><span>1</span><h3>Reservas tu consulta gratis</h3><p>Eliges día y hora aquí abajo. Son 20 minutos.</p></li>
-          <li class="reveal"><span>2</span><h3>Me cuentas tu caso</h3><p>Qué te pasa, qué quieres conseguir y por qué.</p></li>
-          <li class="reveal"><span>3</span><h3>Te propongo un plan</h3><p>Te digo cómo puedo ayudarte, online o en persona.</p></li>
-          <li class="reveal"><span>4</span><h3>Lo hacemos juntos</h3><p>Yo me encargo del trabajo. Tú solo tienes que dejarte ayudar.</p></li>
-        </ol>
       </div>
     </section>
 
-    <!-- LOOKBOOK -->
-    <section class="section soft" id="estilos">
+    <!-- STYLES -->
+    <section class="section" id="estilos">
       <div class="wrap">
         <div class="head head-row reveal">
           <div>
-            <p class="eyebrow">Mis estilos</p>
-            <h2 class="title">Un estilo para <em>cada hombre.</em></h2>
+            <p class="eyebrow">Estilos</p>
+            <h2 class="title">Cada cuerpo, <em>su estilo.</em></h2>
           </div>
-          <div class="filters" id="filters" role="group" aria-label="Filtrar estilos">
-            <button class="chip active" data-filter="all" aria-pressed="true">Todos <span></span></button>
-            <button class="chip" data-filter="streetwear" aria-pressed="false">Streetwear <span></span></button>
-            <button class="chip" data-filter="verano" aria-pressed="false">Verano <span></span></button>
-            <button class="chip" data-filter="chandal" aria-pressed="false">Chándal <span></span></button>
-            <button class="chip" data-filter="arreglado" aria-pressed="false">Arreglado <span></span></button>
+          <div class="filters" id="filters" role="tablist" aria-label="Elegir estilo"></div>
+        </div>
+      </div>
+      <div class="gallery-wrap reveal">
+        <div class="gallery" id="gallery" tabindex="0" aria-label="Looks del estilo elegido"></div>
+        <div class="wrap gallery-nav">
+          <span class="gallery-count" id="gallery-count"></span>
+          <div class="gallery-arrows">
+            <button type="button" id="gal-prev" aria-label="Anterior">←</button>
+            <button type="button" id="gal-next" aria-label="Siguiente">→</button>
           </div>
         </div>
-        <p class="look-hint">Todos los looks son míos. Toca una foto para verla en grande.</p>
-        <div class="lookbook" id="lookbook"></div>
       </div>
     </section>
 
     <!-- ABOUT -->
     <section class="section" id="sobre-mi">
       <div class="wrap about">
-        <figure class="ph ph-about reveal">
-          <img src="img/fotos/jano-9547.jpg" alt="Jano Arribas Díaz con camiseta azul sin mangas y bermudas vaqueras" loading="lazy">
+        <figure class="about-photo reveal">
+          <img src="img/fotos/jano-9547.jpg" alt="Jano Arribas Díaz con camiseta azul sin mangas y bermudas vaqueras" loading="lazy" width="840" height="1400">
         </figure>
         <div class="reveal">
           <p class="eyebrow">Sobre mí</p>
           <h2 class="title">Hola, soy <em>Jano.</em></h2>
-          <p class="quote">“No hace falta tener un físico concreto para verte bien. Hace falta saber sacarte partido.”</p>
-          <p class="muted">En redes me conocéis como <strong>@jjn.dzz</strong>. Llevo años obsesionado con la imagen masculina: la ropa, los colores, los cortes y cómo combinarlo todo para que cada hombre se vea mejor.</p>
-          <p class="muted">Sé adaptarme a cualquier altura, peso y estilo. Por eso monté Mejórate: para ayudarte en persona, con sinceridad y sin postureo.</p>
-          <p class="signature">Jano</p>
+          <p class="muted">En redes me conocéis como <strong>@jjn.dzz</strong>. Llevo años estudiando la imagen: cómo sienta cada corte de ropa, qué colores favorecen a cada piel y qué corte de pelo va con cada cara.</p>
+          <p class="muted">Me adapto a cualquier altura, peso y estilo. Mi trabajo es que salgas sabiendo qué te queda bien y por qué.</p>
           <div class="social">
             <a href="https://www.tiktok.com/@jjn.dzz" target="_blank" rel="noopener">TikTok ↗</a>
             <a href="https://www.instagram.com/jjn.dzz" target="_blank" rel="noopener">Instagram ↗</a>
@@ -242,18 +161,20 @@
     </section>
 
     <!-- BOOKING -->
-    <section class="section dark" id="reservar">
+    <section class="section" id="reservar">
       <div class="wrap booking">
         <div class="booking-intro reveal">
           <p class="eyebrow">Reservar</p>
           <h2 class="title">Tu primera consulta es <em>gratis.</em></h2>
-          <p class="muted">20 minutos para que me cuentes tu problema y por qué necesitas ayuda. Sin compromiso: si no te puedo ayudar, te lo digo.</p>
-          <ul class="mini">
-            <li>Eliges día y hora</li>
-            <li>Me dejas tus datos</li>
-            <li>Te confirmo por WhatsApp</li>
-          </ul>
-          <p class="muted small">¿Prefieres hablar ya? <a href="#" data-wa class="link-light">Escríbeme por WhatsApp</a>.</p>
+          <p class="muted">Elige día y hora y déjame tus datos. Te confirmo la cita por WhatsApp.</p>
+          <div class="contact-card">
+            <p class="muted small">¿Prefieres hablar ya?</p>
+            <a href="#" class="phone" data-call id="phone-text"></a>
+            <div class="actions">
+              <a href="#" class="btn btn-line" data-call>Llamar</a>
+              <a href="#" class="btn btn-line" data-wa>WhatsApp</a>
+            </div>
+          </div>
         </div>
 
         <div class="booker reveal" id="booker">
@@ -261,99 +182,83 @@
             <li class="on">Día</li><li>Hora</li><li>Tus datos</li>
           </ol>
 
-          <!-- Step 1: day -->
           <div class="bstep active" data-bstep="0">
             <div class="cal-head">
               <p class="cal-title" id="cal-month"></p>
               <div class="cal-nav">
-                <button type="button" id="cal-prev" aria-label="Semanas anteriores">←</button>
-                <button type="button" id="cal-next" aria-label="Semanas siguientes">→</button>
+                <button type="button" id="cal-prev" aria-label="Semana anterior">←</button>
+                <button type="button" id="cal-next" aria-label="Semana siguiente">→</button>
               </div>
             </div>
             <div class="days" id="days" role="listbox" aria-label="Elige un día"></div>
             <p class="hint">Los días en gris no tienen horas libres.</p>
           </div>
 
-          <!-- Step 2: time -->
           <div class="bstep" data-bstep="1">
             <button type="button" class="back" data-back>← Cambiar día</button>
             <p class="cal-title" id="chosen-day"></p>
             <div class="slots" id="slots" role="listbox" aria-label="Elige una hora"></div>
           </div>
 
-          <!-- Step 3: form -->
           <form class="bstep" data-bstep="2" id="booking-form" novalidate>
             <button type="button" class="back" data-back>← Cambiar hora</button>
             <p class="cal-title" id="chosen-slot"></p>
             <div class="fields">
-              <label class="field"><span>Nombre</span><input id="f-nombre" name="nombre" autocomplete="given-name" required></label>
-              <label class="field field-s"><span>Edad</span><input id="f-edad" name="edad" type="number" inputmode="numeric" min="14" max="99" required></label>
-              <label class="field"><span>WhatsApp</span><input id="f-whatsapp" name="whatsapp" type="tel" autocomplete="tel" placeholder="600 000 000" required></label>
-              <label class="field"><span>Instagram o TikTok <em>(opcional)</em></span><input id="f-social" name="redes" placeholder="@usuario"></label>
+              <label class="field field-full"><span>Nombre</span><input id="f-nombre" name="nombre" autocomplete="given-name" required></label>
+              <label class="field"><span>Edad</span><input id="f-edad" name="edad" type="number" inputmode="numeric" min="14" max="99" required></label>
+              <label class="field"><span>Sexo</span>
+                <select id="f-sexo" name="sexo" required>
+                  <option value="" selected disabled>Elige</option>
+                  <option>Hombre</option>
+                  <option>Mujer</option>
+                  <option>Prefiero no decirlo</option>
+                </select>
+              </label>
+              <label class="field field-full"><span>Teléfono</span><input id="f-telefono" name="telefono" type="tel" autocomplete="tel" placeholder="600 000 000" required></label>
+              <label class="field field-full"><span>¿Con qué te ayudo?</span>
+                <select id="f-tema" name="tema">
+                  <option>Vestimenta</option>
+                  <option>Colorimetría</option>
+                  <option>Corte de pelo y barba</option>
+                  <option>Cejas y facciones</option>
+                  <option>Cambio de imagen completo</option>
+                </select>
+              </label>
               <fieldset class="field field-full">
                 <legend>¿Cómo prefieres?</legend>
                 <div class="seg">
                   <label><input type="radio" name="modalidad" value="Online" checked><span>Online</span></label>
-                  <label><input type="radio" name="modalidad" value="En persona"><span>En persona</span></label>
+                  <label><input type="radio" name="modalidad" value="En persona (Cádiz)"><span>En persona · Cádiz</span></label>
                 </div>
               </fieldset>
-              <label class="field"><span>Ciudad</span><input id="f-ciudad" name="ciudad" autocomplete="address-level2" required></label>
-              <label class="field"><span>¿Con qué te ayudo?</span>
-                <select id="f-tema" name="tema" required>
-                  <option value="Vestimenta">Vestimenta</option>
-                  <option value="Colorimetría">Colorimetría</option>
-                  <option value="Corte de pelo y barba">Corte de pelo y barba</option>
-                  <option value="Cejas y facciones">Cejas y facciones</option>
-                  <option value="Cambio de imagen completo">Cambio de imagen completo</option>
-                </select>
-              </label>
-              <label class="field field-full"><span>Cuéntame tu problema y por qué necesitas ayuda</span><textarea id="f-problema" name="problema" rows="4" required placeholder="Ej.: mido 1,68 y no encuentro ropa que me quede bien…"></textarea></label>
-              <label class="consent field-full"><input type="checkbox" id="f-consent" required><span>Acepto que Jano Arribas Díaz use mis datos solo para contactarme sobre esta consulta.</span></label>
+              <label class="consent field-full"><input type="checkbox" id="f-consent" required><span>Acepto que Jano Arribas Díaz use estos datos solo para contactarme sobre la cita.</span></label>
             </div>
             <p class="form-error" id="form-error" role="alert" hidden></p>
-            <button type="submit" class="btn btn-light btn-block" id="submit">Reservar consulta gratis</button>
+            <button type="submit" class="btn btn-light btn-block" id="submit">Reservar cita gratis</button>
           </form>
 
-          <!-- Done -->
           <div class="bstep done" data-bstep="3">
             <div class="done-mark">✓</div>
-            <h3>¡Reserva hecha!</h3>
+            <h3>¡Cita reservada!</h3>
             <p class="muted" id="done-text"></p>
             <a href="#" class="btn btn-light btn-block" id="done-wa" target="_blank" rel="noopener">Confirmar por WhatsApp</a>
-            <p class="muted small">Pulsa el botón para enviarme tu reserva y te confirmo enseguida.</p>
+            <p class="muted small">Pulsa para enviarme tu reserva y te confirmo enseguida.</p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- FAQ -->
-    <section class="section has-bubbles" id="dudas">
-      <div class="bubbles" aria-hidden="true"></div>
+    <section class="section section-tight" id="dudas">
       <div class="wrap split">
         <div class="reveal">
           <p class="eyebrow">Dudas</p>
-          <h2 class="title">Preguntas <em>frecuentes.</em></h2>
-          <p class="muted">¿No ves la tuya? <a href="#" data-wa class="link">Pregúntame por WhatsApp.</a></p>
+          <h2 class="title">Antes de <em>reservar.</em></h2>
         </div>
         <div class="faq reveal">
-          <details><summary>¿La primera consulta es gratis de verdad?</summary><p>Sí. Son 20 minutos para conocerte, entender tu problema y ver si te puedo ayudar. Sin compromiso.</p></details>
-          <details><summary>¿Trabajas con mujeres?</summary><p>No. Me especializo en imagen masculina, porque es lo que domino.</p></details>
-          <details><summary>¿Tengo que gastar mucho en ropa?</summary><p>No. Me adapto a tu presupuesto y a lo que ya tienes. Muchas veces el cambio está en combinar mejor, no en comprar más.</p></details>
-          <details><summary>¿Puedes venir conmigo de compras?</summary><p>Sí, si vives en mi zona. Si no, te ayudo online: me mandas fotos desde el probador y te digo qué llevarte.</p></details>
-          <details><summary>¿Sirve para cualquier cuerpo?</summary><p>Sí. Adapto todo a tu altura, peso, complexión y tono de piel.</p></details>
-        </div>
-      </div>
-    </section>
-
-    <!-- FINAL CTA -->
-    <section class="final has-bubbles">
-      <div class="bubbles" aria-hidden="true"></div>
-      <div class="wrap">
-        <p class="eyebrow reveal">Primera consulta gratis</p>
-        <h2 class="reveal">¿Empezamos?</h2>
-        <div class="actions reveal">
-          <a href="#reservar" class="btn btn-dark">Reservar consulta gratis <span class="arrow">→</span></a>
-          <a href="#" class="btn btn-line" data-wa>WhatsApp</a>
+          <details><summary>¿La primera consulta es gratis de verdad?</summary><p>Sí. Hablamos, me cuentas qué quieres mejorar y te digo cómo te puedo ayudar. Sin compromiso.</p></details>
+          <details><summary>¿Dónde puedo verte en persona?</summary><p>Solo en Cádiz. Si vives en otro sitio, te asesoro online por videollamada y WhatsApp.</p></details>
+          <details><summary>¿Tengo que gastar mucho en ropa?</summary><p>No. Me adapto a tu presupuesto y a lo que ya tienes en el armario.</p></details>
         </div>
       </div>
     </section>
@@ -371,7 +276,6 @@
     </div>
   </footer>
 
-
   <!-- Lightbox -->
   <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada" hidden>
     <button type="button" class="lb-close" id="lb-close" aria-label="Cerrar">×</button>
@@ -380,19 +284,16 @@
     <button type="button" class="lb-nav lb-next" id="lb-next" aria-label="Foto siguiente">→</button>
   </div>
 
-  <!-- Mobile sticky CTA -->
-  <div class="mobile-cta" id="mobile-cta">
-    <a href="#reservar" class="btn btn-dark">Consulta gratis</a>
-    <a href="#" class="btn btn-wa" data-wa aria-label="WhatsApp">
+  <!-- Quick actions, always at hand -->
+  <div class="quick" id="quick">
+    <a href="#reservar" class="btn btn-light quick-book">Reservar cita</a>
+    <a href="#" class="quick-icon" data-call aria-label="Llamar">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.1 15.1 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.57 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1Z"/></svg>
+    </a>
+    <a href="#" class="quick-icon quick-wa" data-wa aria-label="WhatsApp">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3Z"/></svg>
     </a>
   </div>
-
-  <!-- Desktop floating WhatsApp -->
-  <a href="#" class="wa-float" data-wa aria-label="Escribir por WhatsApp">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.4-.3Z"/></svg>
-    <span>¿Hablamos?</span>
-  </a>
 
   <script src="js/main.js"></script>
 </body>

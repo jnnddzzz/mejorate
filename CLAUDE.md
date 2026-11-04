@@ -15,25 +15,27 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 
 ## Servicio (lo que vende Jano: su tiempo)
 - Especialidad principal: **vestimenta**. También: colorimetría, corte de pelo y barba, cejas según la cara, facciones.
-- Solo trabaja con **hombres** (es lo que domina); la web debe dejarlo claro.
+- Enfoque: sacar el máximo partido a la forma de cuerpo y la cara de cada cliente. «La moda no tiene reglas». Jano rechazó la frase «vestir como el hombre que quieres ser» por sonar sexista: evitar mensajes de ese tipo.
 - **Primera consulta gratis** (20 min) para que el cliente cuente su problema y por qué necesita ayuda. Es el CTA principal.
-- Modalidades: **online** (videollamada + WhatsApp) y **en persona** si vive en su zona (personal shopper: ir de compras juntos, revisar armario).
-- Objetivo de la web: que contacten con él, de forma sencilla e intuitiva. Él hace el trabajo después.
+- Modalidades: **online** (videollamada + WhatsApp) y **en persona solo en Cádiz** (ir de compras juntos, revisar armario).
+- Objetivo de la web: **portal para reservar cita o llamar**, sencillo, claro y sin distracciones. Él hace el trabajo después.
 - Sin precios públicos por ahora.
 
 ## Reservas
 - Calendario propio en la web (sección `#reservar`): día → hora → datos → confirmación por WhatsApp.
+- Datos que se piden (formulario corto, a petición de Jano): nombre, edad, sexo, teléfono, con qué te ayudo y modalidad. **No** se pide el problema (lo cuentan en la cita).
+- Botones de llamar (`tel:`) y WhatsApp siempre visibles (barra flotante `.quick`).
 - Horario editable en `CONFIG.horario` de `js/main.js`.
 - Los datos se guardan si `CONFIG.formEndpoint` apunta a Formspree o a un Google Apps Script (ver `RESERVAS.md`). El Google Drive de Jano estaba lleno, por eso no se creó la hoja.
 - Botones de WhatsApp con `wa.me` y mensaje prellenado.
 
 ## Diseño
-- **Inmersivo y futurista** (pedido por Jano tras la primera versión editorial en blanco): fondo oscuro, paneles de cristal ahumado, acento degradado cromado, grano y rejilla sutiles, brillo que sigue al cursor.
-- Las fotos de Jano deben ser dinámicas en todo momento: escenario fijo de fondo con sus fotos a cuerpo entero que cambian al hacer scroll y solas cada ~4 s; anillo 3D de fotos en la portada.
-- Jano **no quiere** la foto de la pared amarilla (`jano-1676`) como foto principal.
-- Tipografías: Instrument Serif (titulares) + Inter (texto) + JetBrains Mono (etiquetas, HUD).
-- Tono cercano (tuteo, en primera persona: «Hola, soy Jano»), sencillo e intuitivo.
-- Fotos de Jano protagonistas (distintos estilos, looks y colores).
+- Oscuro, limpio y profesional, como una app hecha por un diseñador. **Minimalista y sin saturar**: Jano rechazó el fondo de fotos que cambiaban, el anillo 3D, las burbujas y el carrusel por ser demasiado.
+- Fotos dinámicas pero limpias: un único visor grande tipo «historias» en la portada (5 looks, uno por estilo) y una galería grande horizontal que muestra un estilo cada vez.
+- **Ninguna foto se repite en la web.** Más fotos repetidas no es mejor.
+- Paneles de cristal ahumado y acento degradado cromado en los titulares en cursiva.
+- Tipografías: Instrument Serif (titulares) + Inter (texto) + JetBrains Mono (etiquetas).
+- Tono cercano (tuteo, «Hola, soy Jano»). Los textos deben dejar claro qué hace y en qué trabaja, sin información que despiste.
 - Marca: se reconoce por **jjn.dzz** y aparece el nombre **Jano Arribas Díaz**.
 
 ## Técnica
@@ -42,10 +44,9 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Configuración editable al principio de `js/main.js` (`CONFIG`): WhatsApp, `formEndpoint`, horario y estilos del texto rotatorio.
 - Fotos en `img/fotos/jano-XXXX.jpg` (1400 px) y `img/fotos/thumb/` (420 px). Salen de Google Drive, carpeta «mis fotos» y su subcarpeta «chandalesç».
 - Reglas de fotos (pedidas por Jano): Jano centrado, **nunca cortar cabeza ni zapatos**, y **solo una foto por outfit**. El centrado se hace con detección de persona (YOLO): los recortes solo quitan laterales, centrados en la caja de la persona (máx. 3:5). Nunca usar `object-fit: cover` con fotos de Jano en marcos de otra proporción.
-- Sin foto fija de portada. Sobre mí: `jano-9547`. El resto está en el array `LOOKS` de `js/main.js` con su categoría: streetwear, verano, chandal, arreglado. Al añadir fotos clásicas, crear la categoría «clásico».
+- Portada: array `PORTADA` de `js/main.js`. Galería: array `GALERIA` (categorías streetwear, verano, chandal, arreglado). Sobre mí: `jano-9547`. Al añadir fotos clásicas, crear la categoría «clásico» en `CATS`.
 - Descartadas por outfit repetido: 0629, 5327, 9421, 9738, 8057, 2241. Por calidad: 9065. No descargada (8 MB, demasiado grande para el conector): IMG_0870.JPG.
-- Efectos: escenario de fondo (`#stage`) con HUD vertical «LOOK 07/33», anillo 3D (`#ring`) que acelera con el scroll, carrusel que se desliza con el scroll (`.reel`), burbujas con parallax (`.bubbles`), lookbook en mosaico con aparición en 3D y visor a pantalla completa (lightbox).
-- Navegación con scroll spy (menú y puntos laterales marcan la sección actual) y barra fija «Consulta gratis» en móvil.
+- Efectos: visor de historias en la portada (`#viewer`), galería horizontal con filtros (`#gallery`), visor a pantalla completa (lightbox), apariciones suaves al hacer scroll y scroll spy en el menú.
 - Vista previa privada: https://claude.ai/artifact/2FYycAd2ZJYSmznCAxgCzx
 
 ## Pendiente
@@ -54,7 +55,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - [x] Número de WhatsApp real (+34 659 50 69 79).
 - [ ] Activar guardado de reservas (`formEndpoint`, ver `RESERVAS.md`).
 - [ ] Confirmar horario real de consultas.
-- [ ] Indicar su zona/ciudad para el servicio en persona.
+- [x] Zona para el servicio en persona: Cádiz.
 - [ ] Activar GitHub Pages.
 - [ ] Testimonios reales de clientes (no inventarlos).
 - [ ] Dominio propio (opcional).

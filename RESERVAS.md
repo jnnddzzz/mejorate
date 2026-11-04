@@ -5,7 +5,7 @@ La web tiene su propio calendario. Cuando alguien reserva la consulta gratis:
 1. **Siempre:** se le abre un botón para mandarte la reserva por WhatsApp con todos sus datos.
 2. **Si configuras un destino** (`formEndpoint` en `js/main.js`), los datos además se guardan solos, aunque la persona no pulse el botón de WhatsApp.
 
-Datos que se guardan: fecha de la reserva, día, hora, nombre, edad, WhatsApp, Instagram/TikTok, modalidad (online o en persona), ciudad, con qué quiere ayuda y su problema.
+Datos que se guardan: fecha de la reserva, día, hora, nombre, edad, sexo, teléfono, con qué quiere ayuda y modalidad (online o en persona en Cádiz).
 
 ## Opción A: Formspree (la más fácil, 5 minutos)
 
@@ -32,8 +32,8 @@ Requiere tener espacio libre en Google Drive.
    function doPost(e) {
      const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
      const p = e.parameter;
-     const cols = ["Fecha de reserva", "Día", "Hora", "Nombre", "Edad", "WhatsApp", "Redes",
-                   "Modalidad", "Ciudad", "Le ayudo con", "Su problema"];
+     const cols = ["Fecha de reserva", "Día", "Hora", "Nombre", "Edad", "Sexo", "Teléfono",
+                   "Le ayudo con", "Modalidad"];
      if (sheet.getLastRow() === 0) sheet.appendRow(cols);
      sheet.appendRow(cols.map(c => p[c] || ""));
      return ContentService.createTextOutput(JSON.stringify({ ok: true }))
