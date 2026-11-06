@@ -47,23 +47,27 @@
   </header>
 
   <main>
-    <!-- HERO: headline, a cinematic look viewer and the booking buttons. Fits one phone screen. -->
+    <!-- HERO: words first. Headline, rotating pain points, the hook and the booking buttons. -->
     <section class="hero" id="inicio">
       <div class="wrap hero-grid">
         <div class="hero-title">
           <p class="pill"><span class="dot"></span> Primera consulta <strong>gratis</strong> · 20 min</p>
           <h1 class="split">Saca el máximo partido a <em>tu imagen.</em></h1>
+          <p class="pain-rotator" aria-live="polite"><span class="pr-label">¿Te suena?</span><span class="pr-text" id="pr-text">Tienes el armario lleno y nada que ponerte.</span></p>
         </div>
 
-        <div class="stage-wrap" id="stage-wrap">
-          <figure class="stage" id="stage" aria-roledescription="carrusel" aria-label="Looks arreglados de Jano">
-            <div class="stage-frame" id="stage-frame"></div>
-            <div class="stage-bars" id="stage-bars"></div>
-            <figcaption class="stage-cap"><span class="sc-index" id="sc-index"></span><span class="sc-name" id="sc-name"></span></figcaption>
-            <button type="button" class="stage-hit prev" id="stage-prev" aria-label="Look anterior"></button>
-            <button type="button" class="stage-hit next" id="stage-next" aria-label="Look siguiente"></button>
-          </figure>
-        </div>
+        <!-- Consultation card: what you get, and the next free times one tap away -->
+        <aside class="consult" id="consult" aria-label="Tu consulta gratis">
+          <p class="consult-eyebrow"><span class="dot"></span> Tu consulta gratis</p>
+          <ul class="consult-list">
+            <li><strong>20 min</strong><span>Me cuentas tu problema y te propongo una solución</span></li>
+            <li><strong>Online</strong><span>O en persona si estás en Cádiz</span></li>
+            <li><strong>L – V</strong><span>De 16:30 a 21:30</span></li>
+          </ul>
+          <p class="consult-label">Próximas horas libres</p>
+          <div class="consult-slots" id="consult-slots"></div>
+          <a href="#reservar" class="consult-more">Ver todo el calendario →</a>
+        </aside>
 
         <div class="hero-body">
           <p class="hook">¿Sabes que puedes verte mejor pero no sabes por dónde empezar? <strong>Te regalo 20 minutos: me cuentas tu problema y te propongo cómo solucionarlo.</strong></p>

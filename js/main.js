@@ -17,7 +17,7 @@ const CONFIG = {
 // Cada foto aparece una sola vez en toda la web. Todas miden 1400 px de alto; el número es su ancho.
 // Para añadir una: guárdala en img/fotos/ (y una pequeña en img/fotos/thumb/) y añádela a una lista.
 const CATS = { streetwear: "Streetwear", verano: "Verano", chandal: "Chándal", arreglado: "Arreglado" };
-const FORMALES = [          // Retrato de la portada: looks arreglados, van pasando
+const FORMALES = [          // Looks arreglados: abren la rotación de «Sobre mí»
   ["1676", "Cuero negro y recto"],
   ["8356", "Vaquero oscuro"],
   ["0412", "Cuero y estampado"],
@@ -147,37 +147,25 @@ burger.addEventListener("click", () => toggleMenu(!nav.classList.contains("open"
 $$("#menu a").forEach(a => a.addEventListener("click", () => toggleMenu(false)));
 addEventListener("keydown", e => { if (e.key === "Escape") toggleMenu(false); });
 
-// ---------- Hero stage: the formal looks, one at a time, story style ----------
-const stageWrap = $("#stage-wrap");
-const stageEl = $("#stage");
-const retrato = id => `img/fotos/retrato/jano-${id}.jpg`;
-$("#stage-frame").innerHTML = FORMALES.map(([id, name], i) => `
-  <div class="st-slide${i ? "" : " on"}">
-    <img class="bg" src="${retrato(id)}" alt="" ${i ? 'loading="lazy"' : ""}>
-    <img class="fg" src="${retrato(id)}" alt="Jano: ${name.toLowerCase()}" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}>
-  </div>`).join("");
-$("#stage-bars").innerHTML = FORMALES.map(() => "<span><i></i></span>").join("");
-const stSlides = $$(".st-slide", stageEl), stBars = $$("#stage-bars span");
-let stIdx = 0;
-const showStage = i => {
-  stIdx = (i + FORMALES.length) % FORMALES.length;
-  stSlides.forEach((sl, j) => sl.classList.toggle("on", j === stIdx));
-  stBars.forEach((b, j) => {
-    b.className = j < stIdx ? "done" : "";
-    const fill = b.firstElementChild;
-    fill.style.animation = "none"; void fill.offsetWidth; fill.style.animation = "";
-  });
-  if (!reduceMotion) stBars[stIdx].className = "run";
-  $("#sc-index").textContent = `${String(stIdx + 1).padStart(2, "0")}/${String(FORMALES.length).padStart(2, "0")}`;
-  $("#sc-name").textContent = FORMALES[stIdx][1];
-};
-stBars.forEach(b => b.firstElementChild.addEventListener("animationend", () => showStage(stIdx + 1)));
-$("#stage-prev").addEventListener("click", () => showStage(stIdx - 1));
-$("#stage-next").addEventListener("click", () => showStage(stIdx + 1));
-stageEl.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") stageEl.classList.add("paused"); });
-stageEl.addEventListener("pointerleave", () => stageEl.classList.remove("paused"));
-document.addEventListener("visibilitychange", () => stageEl.classList.toggle("paused", document.hidden));
-showStage(0);
+// ---------- Hero: rotating pain points ----------
+const DOLORES = [
+  "Tienes el armario lleno y nada que ponerte.",
+  "Lo que en otros queda bien, en ti no.",
+  "Sales de la peluquería y no te reconoces.",
+  "En las fotos hay algo que no encaja.",
+  "No sabes qué colores te favorecen."
+];
+const prText = $("#pr-text");
+let prIdx = 0;
+if (!reduceMotion) setInterval(() => {
+  if (document.hidden) return;
+  prText.classList.add("out");
+  setTimeout(() => {
+    prIdx = (prIdx + 1) % DOLORES.length;
+    prText.textContent = DOLORES[prIdx];
+    prText.classList.remove("out");
+  }, 450);
+}, 2800);
 
 // 3D tilt + light that follows the pointer
 const addTilt = (el, target = el, max = 8) => {
@@ -195,7 +183,7 @@ const addTilt = (el, target = el, max = 8) => {
     target.style.setProperty("--ry", "0deg"); target.style.setProperty("--rx", "0deg"); target.style.setProperty("--hs", "1");
   });
 };
-addTilt(stageEl, stageEl, 5);
+addTilt($("#consult"), $("#consult"), 4);
 $$(".tilt").forEach(el => addTilt(el, el, 4));
 
 // ---------- Custom cursor and magnetic buttons ----------
@@ -302,8 +290,9 @@ addEventListener("keydown", e => {
 // ---------- About: photos rotate with a wipe ----------
 const aboutFrame = $("#about-frame");
 const aboutDots = $("#about-dots");
-aboutFrame.innerHTML = SOBRE_MI.map((id, i) => `<img src="${photo(id)}" alt="${i ? "" : "Jano Arribas Díaz"}" ${i ? 'loading="lazy"' : ""} class="${i ? "" : "on"}">`).join("");
-aboutDots.innerHTML = SOBRE_MI.map((_, i) => `<i class="${i ? "" : "on"}"></i>`).join("");
+const ABOUT_SRC = [...FORMALES.map(([id]) => `img/fotos/retrato/jano-${id}.jpg`), ...SOBRE_MI.map(photo)];
+aboutFrame.innerHTML = ABOUT_SRC.map((src, i) => `<img src="${src}" alt="${i ? "" : "Jano Arribas Díaz"}" ${i ? 'loading="lazy"' : ""} class="${i ? "" : "on"}">`).join("");
+aboutDots.innerHTML = ABOUT_SRC.map((_, i) => `<i class="${i ? "" : "on"}"></i>`).join("");
 const aboutImgs = $$("img", aboutFrame), aboutBars = $$("i", aboutDots);
 let aboutIdx = 0, aboutVisible = false;
 new IntersectionObserver(([e]) => { aboutVisible = e.isIntersecting; }).observe(aboutFrame);
@@ -324,13 +313,6 @@ const onFrame = () => {
   onScrollUI();
   if (reduceMotion) return;
   const vh = innerHeight;
-  // hero stage eases back as you leave the first screen
-  const hr = stageWrap.getBoundingClientRect();
-  if (hr.bottom > 0) {
-    const p = clamp(scrollY / (vh * .8));
-    stageWrap.style.transform = `translate3d(0,${(p * 50).toFixed(1)}px,0) scale(${(1 - p * .08).toFixed(3)})`;
-    stageWrap.style.opacity = (1 - p * .7).toFixed(3);
-  }
   // pain sentences: each slides in from its own side, sharp at the centre of the screen
   litLines.forEach((line, i) => {
     const r = line.getBoundingClientRect();
@@ -422,29 +404,38 @@ $("#slots").addEventListener("click", e => {
 });
 $$("[data-back]", booker).forEach(b => b.addEventListener("click", () => goStep(0)));
 
-// Hero shortcut: the next free time, one tap to the form
+// Hero shortcuts: the next free times, one tap to the form
 const fmtShort = new Intl.DateTimeFormat("es-ES", { weekday: "long", day: "numeric" });
-const nextSlot = (() => {
-  for (let d = new Date(today); d <= lastDay; d.setDate(d.getDate() + 1)) {
+const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+const dayWord = d => d.getTime() === today.getTime() ? "Hoy" : d.getTime() === tomorrow.getTime() ? "Mañana" : cap(fmtShort.format(d));
+const nextSlots = (() => {
+  const out = [];
+  for (let d = new Date(today); d <= lastDay && out.length < 3; d.setDate(d.getDate() + 1)) {
     const list = slotsFor(d);
-    if (list.length) return { date: new Date(d), time: list[0] };
+    // one per day, so the three options feel like a real choice
+    if (list.length) out.push({ date: new Date(d), time: list[0] });
   }
-  return null;
+  return out;
 })();
-if (nextSlot) {
-  const isToday = nextSlot.date.getTime() === today.getTime();
-  const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
-  const when = isToday ? "hoy" : nextSlot.date.getTime() === tomorrow.getTime() ? "mañana" : fmtShort.format(nextSlot.date);
-  $("#next-slot-text").textContent = `${when} a las ${nextSlot.time}`;
+const bookSlot = sl => {
+  viewMonth = new Date(sl.date.getFullYear(), sl.date.getMonth(), 1);
+  chooseDay(new Date(sl.date));
+  pick.time = sl.time;
+  $("#chosen-slot").textContent = `${cap(fmtLong.format(pick.date))} · ${pick.time}`;
+  goStep(1);
+  scrollTo({ top: booker.getBoundingClientRect().top + scrollY - 90, behavior: reduceMotion ? "auto" : "smooth" });
+  setTimeout(() => $("#f-nombre").focus({ preventScroll: true }), 900);
+};
+if (nextSlots.length) {
+  const first = nextSlots[0];
+  $("#next-slot-text").textContent = `${dayWord(first.date).toLowerCase()} a las ${first.time}`;
   $("#next-slot").hidden = false;
-  $("#next-slot").addEventListener("click", () => {
-    viewMonth = new Date(nextSlot.date.getFullYear(), nextSlot.date.getMonth(), 1);
-    chooseDay(new Date(nextSlot.date));
-    pick.time = nextSlot.time;
-    $("#chosen-slot").textContent = `${cap(fmtLong.format(pick.date))} · ${pick.time}`;
-    goStep(1);
-    scrollTo({ top: booker.getBoundingClientRect().top + scrollY - 90, behavior: reduceMotion ? "auto" : "smooth" });
-    setTimeout(() => $("#f-nombre").focus({ preventScroll: true }), 900);
+  $("#next-slot").addEventListener("click", () => bookSlot(first));
+  $("#consult-slots").innerHTML = nextSlots.map((sl, i) =>
+    `<button type="button" class="consult-slot" data-i="${i}"><span>${dayWord(sl.date)}</span><b>${sl.time} →</b></button>`).join("");
+  $("#consult-slots").addEventListener("click", e => {
+    const b = e.target.closest(".consult-slot");
+    if (b) bookSlot(nextSlots[+b.dataset.i]);
   });
 }
 
