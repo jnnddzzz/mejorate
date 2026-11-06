@@ -23,7 +23,7 @@ const FORMALES = [          // Retrato de la portada: looks arreglados, van pasa
   ["0412", "Cuero y estampado"],
   ["6512", "Cuero y cruces"]
 ];
-const PORTADA = {            // Tarjetas de estilo (al hacer scroll): sus fotos van rotando
+const PORTADA = {            // Tarjetas de «Estilos»: sus fotos van rotando
   streetwear: ["1810", "3160", "5430"],
   verano: ["8663", "2074", "9773"],
   chandal: ["4873", "9260"],
@@ -43,7 +43,6 @@ const SOBRE_MI = ["9547", "8698", "5439"];
 const $ = (s, el = document) => el.querySelector(s);
 const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
-const lerp = (a, b, t) => a + (b - a) * t;
 const ease = t => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -71,11 +70,8 @@ const splitWords = el => {
 };
 $$(".split").forEach(splitWords);
 
-// Pain sentences: each word lights up with the scroll
+// Pain sentences slide in from alternating sides (see onFrame)
 const litLines = $$(".lit");
-litLines.forEach(p => {
-  p.innerHTML = p.textContent.split(" ").map(w => `<span class="lw">${w}</span>`).join(" ");
-});
 
 // ---------- Reveal on scroll ----------
 $$(".steps, .modes").forEach(g => [...g.children].forEach((el, i) => el.style.setProperty("--d", `${i * .1}s`)));
@@ -151,142 +147,37 @@ burger.addEventListener("click", () => toggleMenu(!nav.classList.contains("open"
 $$("#menu a").forEach(a => a.addEventListener("click", () => toggleMenu(false)));
 addEventListener("keydown", e => { if (e.key === "Escape") toggleMenu(false); });
 
-// ---------- Hero deck ----------
-const heroPin = $("#hero-pin");
-const stage = $("#hero-stage");
-const heroIntro = $("#hero-intro");
-const heroPick = $("#hero-pick");
-const hint = $("#scroll-hint");
-const deck = $("#deck");
-const DECK = Object.entries(PORTADA);
-deck.innerHTML = DECK.map(([cat, ids], i) => `
-  <a class="card" href="#estilos" data-cat="${cat}" data-cursor="Ver looks" aria-label="Ver mis looks ${CATS[cat]}" style="z-index:${DECK.length - i}">
-    <span class="card-media">${ids.map((id, j) => `<img src="${photo(id)}" alt="" ${j ? 'loading="lazy"' : ""} class="${j ? "" : "on"}" width="840" height="1400">`).join("")}</span>
-    <span class="card-count">${ids.map((_, j) => `<i class="${j ? "" : "on"}"></i>`).join("")}</span>
-    <span class="card-info"><span class="card-name">${CATS[cat]}<small>${ids.length + GALERIA.filter(l => l.cat === cat).length} looks</small></span><span class="card-go" aria-hidden="true">→</span></span>
-  </a>`).join("");
-const cards = $$(".card", deck);
-const portrait = $("#portrait");
-$("#portrait-frame").innerHTML = FORMALES.map(([id, name], i) =>
-  `<img src="img/fotos/retrato/jano-${id}.jpg" alt="Jano: ${name.toLowerCase()}" ${i ? 'loading="lazy"' : 'fetchpriority="high"'} class="${i ? "" : "on"}">`).join("");
-$("#pc-bars").innerHTML = FORMALES.map((_, i) => `<i class="${i ? "" : "on"}"></i>`).join("");
-const pImgs = $$("#portrait-frame img"), pBars = $$("#pc-bars i");
-let pIdx = 0;
-const showPortrait = i => {
-  const prev = pIdx;
-  pIdx = (i + FORMALES.length) % FORMALES.length;
-  if (prev !== pIdx) {
-    pImgs.forEach(im => im.classList.remove("prev"));
-    pImgs[prev].classList.replace("on", "prev");
-    pImgs[pIdx].classList.add("on");
-  }
-  pBars.forEach((b, j) => b.classList.toggle("on", j === pIdx));
-  $("#pc-index").textContent = `${String(pIdx + 1).padStart(2, "0")} / ${String(FORMALES.length).padStart(2, "0")}`;
-  $("#pc-name").textContent = FORMALES[pIdx][1];
-};
-showPortrait(0);
-let geo = [];
-let heroP = 0;
-let heroMobile = false;
-
-const layoutDeck = () => {
-  const W = stage.clientWidth, H = stage.clientHeight;
-  const mobile = W < 760;
-  heroMobile = mobile;
-  const gutter = Math.max(16, W * .04);
-  const top0 = heroPick.offsetTop + heroPick.offsetHeight + (mobile ? 16 : 24);
-  const bottomPad = mobile ? 96 : 40;                     // keep clear of the quick-actions bar
-  const avail = Math.min(1400, W - gutter * 2);
-  const cols = mobile ? 2 : 4, gap = mobile ? 12 : 18, rows = mobile ? 2 : 1;
-  const areaH = H - top0 - bottomPad;
-  const byW = ((avail - gap * (cols - 1)) / cols) / .6;
-  const byH = (areaH - gap * (rows - 1)) / rows;
-  const ch = Math.max(150, Math.min(byW, byH)), cw = ch * .6;
-  const total = cols * cw + (cols - 1) * gap;
-  const x0 = (W - total) / 2;
-  const y0 = top0 + Math.max(0, (areaH - (rows * ch + (rows - 1) * gap)) / 2);
-  // the editorial portrait the cards grow out of
-  const wrapRight = (W + Math.min(1200, W)) / 2 - gutter;
-  const ph = mobile ? Math.min(H * .66, (W - 64) / .55) : Math.min(H * .68, 640);
-  const pw = ph * .55;
-  const Sx = mobile ? W / 2 : wrapRight - pw / 2 - 12;
-  const Sy = mobile ? H * .5 + 20 : H * .5;
-  Object.assign(portrait.style, { width: `${pw}px`, height: `${ph}px`, left: `${Sx - pw / 2}px`, top: `${Sy - ph / 2 - 14}px` });
-  const s0 = ph / ch;
-  const rot = [0, 0, 0, 0], off = [0, 0, 0, 0];
-  geo = cards.map((c, i) => {
-    const col = i % cols, row = Math.floor(i / cols);
-    const fx = x0 + col * (cw + gap), fy = y0 + row * (ch + gap);
-    c.style.setProperty("--cw", `${cw}px`);
-    c.style.setProperty("--ch", `${ch}px`);
-    c.style.left = `${fx}px`;
-    c.style.top = `${fy}px`;
-    return { dx: Sx + off[i] * (mobile ? .6 : 1) - (fx + cw / 2), dy: Sy - (fy + ch / 2), rot: rot[i], s0 };
+// ---------- Hero stage: the formal looks, one at a time, story style ----------
+const stageWrap = $("#stage-wrap");
+const stageEl = $("#stage");
+const retrato = id => `img/fotos/retrato/jano-${id}.jpg`;
+$("#stage-frame").innerHTML = FORMALES.map(([id, name], i) => `
+  <div class="st-slide${i ? "" : " on"}">
+    <img class="bg" src="${retrato(id)}" alt="" ${i ? 'loading="lazy"' : ""}>
+    <img class="fg" src="${retrato(id)}" alt="Jano: ${name.toLowerCase()}" ${i ? 'loading="lazy"' : 'fetchpriority="high"'}>
+  </div>`).join("");
+$("#stage-bars").innerHTML = FORMALES.map(() => "<span><i></i></span>").join("");
+const stSlides = $$(".st-slide", stageEl), stBars = $$("#stage-bars span");
+let stIdx = 0;
+const showStage = i => {
+  stIdx = (i + FORMALES.length) % FORMALES.length;
+  stSlides.forEach((sl, j) => sl.classList.toggle("on", j === stIdx));
+  stBars.forEach((b, j) => {
+    b.className = j < stIdx ? "done" : "";
+    const fill = b.firstElementChild;
+    fill.style.animation = "none"; void fill.offsetWidth; fill.style.animation = "";
   });
-  heroPin.style.height = `${H * (mobile ? 3.2 : 2.3)}px`;
+  if (!reduceMotion) stBars[stIdx].className = "run";
+  $("#sc-index").textContent = `${String(stIdx + 1).padStart(2, "0")}/${String(FORMALES.length).padStart(2, "0")}`;
+  $("#sc-name").textContent = FORMALES[stIdx][1];
 };
-
-let tFloat = 0;
-const renderHero = now => {
-  const travel = heroPin.offsetHeight - stage.clientHeight;
-  heroP = travel > 0 ? clamp(-heroPin.getBoundingClientRect().top / travel) : 1;
-  // mobile has three beats: the text, the portrait rising into view, then the cards
-  const e = heroMobile ? ease(clamp((heroP - .5) / .36)) : ease(clamp((heroP - .04) / .62));
-  const rise = heroMobile ? 1 - ease(clamp((heroP - .1) / .28)) : 0;
-  tFloat = now / 1000;
-  cards.forEach((c, i) => {
-    const g = geo[i];
-    if (!g) return;
-    const tx = g.dx * (1 - e), ty = g.dy * (1 - e);
-    const s = lerp(g.s0, 1, e);
-    c.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0) scale(${s.toFixed(3)})`;
-    c.style.opacity = clamp((e - .12) / .25).toFixed(3);
-    c.style.visibility = e <= .12 ? "hidden" : "visible";
-    c.style.setProperty("--info", clamp((e - .75) / .25).toFixed(3));
-  });
-  const pf = clamp(e / .3);
-  portrait.style.opacity = (1 - pf).toFixed(3);
-  portrait.style.transform = `translate3d(0,${(rise * stage.clientHeight * .75 - pf * 24).toFixed(1)}px,0) scale(${(1 - pf * .06).toFixed(3)})`;
-  portrait.style.visibility = pf >= 1 ? "hidden" : "visible";
-  const fade = clamp(heroP / (heroMobile ? .22 : .32));
-  heroIntro.style.opacity = (1 - fade).toFixed(3);
-  heroIntro.style.transform = `translate3d(0,${(-fade * 70).toFixed(1)}px,0)`;
-  heroIntro.style.visibility = fade >= 1 ? "hidden" : "visible";
-  const pk = heroMobile ? clamp((heroP - .62) / .2) : clamp((heroP - .42) / .25);
-  heroPick.style.opacity = pk.toFixed(3);
-  heroPick.style.transform = `translate3d(0,${((1 - pk) * 30).toFixed(1)}px,0)`;
-  heroPick.classList.toggle("live", pk > .5);
-  hint.style.opacity = (1 - clamp(heroP * 6)).toFixed(3);
-  deck.classList.toggle("spread", e > .97);
-};
-let heroVisible = true;
-new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; }).observe(heroPin);
-const heroLoop = now => {
-  if (heroVisible) renderHero(now);
-  requestAnimationFrame(heroLoop);
-};
-layoutDeck();
-requestAnimationFrame(heroLoop);
-
-// The portrait shows the formal looks one after another
-if (!reduceMotion) setInterval(() => {
-  if (!document.hidden && heroVisible && portrait.style.visibility !== "hidden") showPortrait(pIdx + 1);
-}, 3600);
-
-// Each card cycles through its own photos
-let cyc = 0;
-if (!reduceMotion) setInterval(() => {
-  if (document.hidden || !heroVisible) return;
-  const c = cards[cyc % cards.length];
-  const imgs = $$(".card-media img", c), bars = $$(".card-count i", c);
-  if (imgs.length > 1) {
-    const k = imgs.findIndex(im => im.classList.contains("on"));
-    const n = (k + 1) % imgs.length;
-    imgs[k].classList.remove("on"); imgs[n].classList.add("on");
-    bars[k].classList.remove("on"); bars[n].classList.add("on");
-  }
-  cyc++;
-}, 900);
+stBars.forEach(b => b.firstElementChild.addEventListener("animationend", () => showStage(stIdx + 1)));
+$("#stage-prev").addEventListener("click", () => showStage(stIdx - 1));
+$("#stage-next").addEventListener("click", () => showStage(stIdx + 1));
+stageEl.addEventListener("pointerenter", e => { if (e.pointerType === "mouse") stageEl.classList.add("paused"); });
+stageEl.addEventListener("pointerleave", () => stageEl.classList.remove("paused"));
+document.addEventListener("visibilitychange", () => stageEl.classList.toggle("paused", document.hidden));
+showStage(0);
 
 // 3D tilt + light that follows the pointer
 const addTilt = (el, target = el, max = 8) => {
@@ -304,7 +195,7 @@ const addTilt = (el, target = el, max = 8) => {
     target.style.setProperty("--ry", "0deg"); target.style.setProperty("--rx", "0deg"); target.style.setProperty("--hs", "1");
   });
 };
-cards.forEach(c => addTilt(c, $(".card-media", c), 7));
+addTilt(stageEl, stageEl, 5);
 $$(".tilt").forEach(el => addTilt(el, el, 4));
 
 // ---------- Custom cursor and magnetic buttons ----------
@@ -333,113 +224,48 @@ if (finePointer && !reduceMotion) {
   });
 }
 
-// ---------- Styles gallery: pinned, photos glide sideways ----------
-const pin = $("#styles-pin");
-const gallery = $("#gallery");
-const track = $("#gallery-track");
-const filters = $("#filters");
-const galBar = $("#gallery-bar");
-const pinned = !reduceMotion;
-if (!pinned) document.documentElement.classList.add("no-pin");
-let activeCat = "streetwear";
-let galItems = [], looksEls = [], travel = 0;
+// ---------- Styles: one card per style; tap opens every look of that style ----------
+const grid = $("#style-grid");
+const lookList = cat => [
+  ...PORTADA[cat].map(id => ({ id, cat, src: photo(id) })),
+  ...GALERIA.filter(l => l.cat === cat)
+];
+grid.innerHTML = Object.entries(PORTADA).map(([cat, ids], i) => `
+  <button type="button" class="style-tile pop" data-cat="${cat}" data-cursor="Ver looks" style="--d:${(i * .08).toFixed(2)}s" aria-label="Ver mis looks ${CATS[cat]}">
+    ${ids.map((id, j) => `<img src="${photo(id)}" alt="" loading="lazy" class="${j ? "" : "on"}">`).join("")}
+    <span class="st-bars">${ids.map((_, j) => `<i class="${j ? "" : "on"}"></i>`).join("")}</span>
+    <span class="st-info"><span class="st-name">${CATS[cat]}<small>${lookList(cat).length} looks</small></span><span class="st-go" aria-hidden="true">→</span></span>
+  </button>`).join("");
+const tiles = $$(".style-tile", grid);
+tiles.forEach(t => io.observe(t));
+let gridVisible = false, cyc = 0;
+new IntersectionObserver(([e]) => { gridVisible = e.isIntersecting; }).observe(grid);
+if (!reduceMotion) setInterval(() => {
+  if (document.hidden || !gridVisible) return;
+  const t = tiles[cyc++ % tiles.length];
+  const imgs = $$("img", t), bars = $$(".st-bars i", t);
+  if (imgs.length < 2) return;
+  const k = imgs.findIndex(im => im.classList.contains("on")), n = (k + 1) % imgs.length;
+  imgs[k].classList.remove("on"); imgs[n].classList.add("on");
+  bars[k].classList.remove("on"); bars[n].classList.add("on");
+}, 1100);
 
-filters.innerHTML = Object.entries(CATS).map(([k, v]) =>
-  `<button type="button" class="chip" role="tab" data-cat="${k}" aria-selected="${k === activeCat}">${v}</button>`).join("");
-
-const updateGallery = () => {
-  if (!pinned) {
-    const max = gallery.scrollWidth - gallery.clientWidth - 4;
-    $("#gal-prev").disabled = gallery.scrollLeft <= 4;
-    $("#gal-next").disabled = gallery.scrollLeft >= max;
-    galBar.style.width = `${max > 0 ? (gallery.scrollLeft / max) * 100 : 100}%`;
-    return;
-  }
-  const r = pin.getBoundingClientRect();
-  if (r.bottom < 0 || r.top > innerHeight) return;
-  const p = travel > 0 ? clamp(-r.top / travel) : 0;
-  // a style with few photos sits centred; a long one glides with the scroll
-  const shift = travel > 0 ? -p * travel : Math.max(0, (innerWidth - track.scrollWidth) / 2);
-  track.style.transform = `translate3d(${shift.toFixed(1)}px,0,0)`;
-  galBar.style.width = `${travel > 0 ? p * 100 : 100}%`;
-  $("#gal-prev").disabled = p <= .001;
-  $("#gal-next").disabled = p >= .999 || travel === 0;
-  const mid = innerWidth / 2;
-  let best = null, bestD = Infinity;
-  looksEls.forEach(el => {
-    const b = el.getBoundingClientRect();
-    const off = (b.left + b.width / 2 - mid) / innerWidth;
-    const k = Math.min(1, Math.abs(off) * 1.6);
-    el.style.transform = `perspective(1200px) rotateY(${(off * -10).toFixed(2)}deg) scale(${(1 - k * .14).toFixed(3)})`;
-    el.style.opacity = (1 - k * .55).toFixed(3);
-    el.style.filter = `brightness(${(1 - k * .35).toFixed(3)})`;
-    if (Math.abs(off) < bestD) { bestD = Math.abs(off); best = el; }
-  });
-  looksEls.forEach(el => el.classList.toggle("center", el === best));
-};
-
-const layoutGallery = () => {
-  if (!pinned) return updateGallery();
-  travel = Math.max(0, track.scrollWidth - innerWidth);
-  pin.style.height = `${innerHeight + travel}px`;
-  updateGallery();
-};
-
-const renderGallery = () => {
-  galItems = GALERIA.filter(l => l.cat === activeCat);
-  track.innerHTML = galItems.map((l, i) => `
-    <button type="button" class="look" data-i="${i}" data-cursor="Ampliar" style="aspect-ratio:${l.w}/1400" aria-label="Ver look ${i + 1} en grande">
-      <img src="${l.src}" alt="Jano con un look ${CATS[l.cat].toLowerCase()}" loading="lazy" width="${l.w}" height="1400">
-      <figcaption>${String(i + 1).padStart(2, "0")}</figcaption>
-    </button>`).join("");
-  looksEls = $$(".look", track);
-  $("#gallery-count").textContent = `${CATS[activeCat].toUpperCase()} · ${galItems.length} LOOKS`;
-  gallery.scrollLeft = 0;
-  layoutGallery();
-};
-
-const selectCat = cat => {
-  if (cat === activeCat) return;
-  activeCat = cat;
-  $$(".chip", filters).forEach(b => b.setAttribute("aria-selected", b.dataset.cat === cat));
-  renderGallery();
-};
-filters.addEventListener("click", e => {
-  const c = e.target.closest(".chip");
-  if (!c || c.dataset.cat === activeCat) return;
-  selectCat(c.dataset.cat);
-  if (pinned) scrollTo({ top: pin.getBoundingClientRect().top + scrollY, behavior: "smooth" });
-});
-// Hero cards open their style in the gallery
-deck.addEventListener("click", e => {
-  const c = e.target.closest(".card");
-  if (!c) return;
-  e.preventDefault();
-  selectCat(c.dataset.cat);
-  const target = pinned ? pin.getBoundingClientRect().top + scrollY : $("#estilos").getBoundingClientRect().top + scrollY - 72;
-  scrollTo({ top: target, behavior: reduceMotion ? "auto" : "smooth" });
-});
-
-const cardStep = () => (looksEls[0]?.offsetWidth || 300) + 20;
-const moveGallery = dir => {
-  if (!pinned) return gallery.scrollBy({ left: dir * cardStep(), behavior: "smooth" });
-  scrollBy({ top: dir * cardStep(), behavior: "smooth" });
-};
-$("#gal-prev").addEventListener("click", () => moveGallery(-1));
-$("#gal-next").addEventListener("click", () => moveGallery(1));
-gallery.addEventListener("scroll", updateGallery, { passive: true });
-renderGallery();
-
-// Lightbox
+// Lightbox: every look of the chosen style, swipe or arrows
 const lb = $("#lightbox");
 const lbImg = $("#lb-img");
-let lbIndex = 0;
-const openLb = i => {
+let galItems = [], lbIndex = 0, lbOpener = null;
+const showLb = i => {
   lbIndex = (i + galItems.length) % galItems.length;
   const l = galItems[lbIndex];
   lbImg.src = l.src;
   lbImg.alt = `Jano con un look ${CATS[l.cat].toLowerCase()}`;
-  $("#lb-cap").textContent = `${CATS[l.cat]} · ${String(lbIndex + 1).padStart(2, "0")}/${galItems.length}`;
+  $("#lb-cap").textContent = `${CATS[l.cat]} · ${String(lbIndex + 1).padStart(2, "0")}/${String(galItems.length).padStart(2, "0")}`;
+  new Image().src = galItems[(lbIndex + 1) % galItems.length].src;
+};
+const openStyle = (cat, opener) => {
+  galItems = lookList(cat);
+  lbOpener = opener;
+  showLb(0);
   lb.hidden = false;
   document.body.classList.add("locked");
   $("#lb-close").focus();
@@ -447,21 +273,30 @@ const openLb = i => {
 const closeLb = () => {
   lb.hidden = true;
   document.body.classList.remove("locked");
-  track.querySelector(`[data-i="${lbIndex}"]`)?.focus({ preventScroll: true });
+  lbOpener?.focus({ preventScroll: true });
 };
-gallery.addEventListener("click", e => {
-  const b = e.target.closest(".look");
-  if (b) openLb(+b.dataset.i);
+grid.addEventListener("click", e => {
+  const t = e.target.closest(".style-tile");
+  if (t) openStyle(t.dataset.cat, t);
 });
 $("#lb-close").addEventListener("click", closeLb);
-$("#lb-prev").addEventListener("click", () => openLb(lbIndex - 1));
-$("#lb-next").addEventListener("click", () => openLb(lbIndex + 1));
+$("#lb-prev").addEventListener("click", () => showLb(lbIndex - 1));
+$("#lb-next").addEventListener("click", () => showLb(lbIndex + 1));
+$("#lb-cta").addEventListener("click", closeLb);
 lb.addEventListener("click", e => { if (e.target === lb) closeLb(); });
+let touchX = null;
+lb.addEventListener("touchstart", e => { touchX = e.touches[0].clientX; }, { passive: true });
+lb.addEventListener("touchend", e => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  if (Math.abs(dx) > 40) showLb(lbIndex + (dx < 0 ? 1 : -1));
+  touchX = null;
+});
 addEventListener("keydown", e => {
   if (lb.hidden) return;
   if (e.key === "Escape") closeLb();
-  if (e.key === "ArrowLeft") openLb(lbIndex - 1);
-  if (e.key === "ArrowRight") openLb(lbIndex + 1);
+  if (e.key === "ArrowLeft") showLb(lbIndex - 1);
+  if (e.key === "ArrowRight") showLb(lbIndex + 1);
 });
 
 // ---------- About: photos rotate with a wipe ----------
@@ -487,20 +322,28 @@ let ticking = false;
 const onFrame = () => {
   ticking = false;
   onScrollUI();
-  updateGallery();
+  if (reduceMotion) return;
   const vh = innerHeight;
-  litLines.forEach(line => {
+  // hero stage eases back as you leave the first screen
+  const hr = stageWrap.getBoundingClientRect();
+  if (hr.bottom > 0) {
+    const p = clamp(scrollY / (vh * .8));
+    stageWrap.style.transform = `translate3d(0,${(p * 50).toFixed(1)}px,0) scale(${(1 - p * .08).toFixed(3)})`;
+    stageWrap.style.opacity = (1 - p * .7).toFixed(3);
+  }
+  // pain sentences: each slides in from its own side, sharp at the centre of the screen
+  litLines.forEach((line, i) => {
     const r = line.getBoundingClientRect();
-    if (r.bottom < -50 || r.top > vh + 50) return;
-    const p = clamp((vh * .88 - r.top) / (vh * .42));
-    const words = line.children, n = words.length;
-    for (let i = 0; i < n; i++) words[i].style.opacity = Math.max(.14, clamp(p * n - i)).toFixed(3);
+    if (r.bottom < -100 || r.top > vh + 100) return;
+    const p = ease(clamp((vh * .92 - r.top) / (vh * .38)));
+    const dir = i % 2 ? 1 : -1;
+    line.style.transform = `translate3d(${((1 - p) * dir * 80).toFixed(1)}px,${((1 - p) * 30).toFixed(1)}px,0)`;
+    line.style.opacity = (.08 + p * .92).toFixed(3);
+    line.style.filter = p > .99 ? "none" : `blur(${((1 - p) * 10).toFixed(1)}px)`;
   });
 };
 addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(onFrame); } }, { passive: true });
-let resizeT;
-addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => { layoutDeck(); layoutGallery(); onFrame(); }, 120); });
-addEventListener("load", () => { layoutDeck(); layoutGallery(); onFrame(); });
+addEventListener("resize", onFrame);
 onFrame();
 
 // ---------- Booking: large month calendar + times ----------

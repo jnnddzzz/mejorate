@@ -33,7 +33,10 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Experiencia **inusual, inmersiva y «dopamínica» pero intuitiva**, minimalista, sin saturar. Nivel de estudio de animación.
 - Jano rechazó: fondo de fotos que cambiaban, anillo 3D, burbujas, carrusel de fotos repetidas, y un visor de historias pequeño en la portada.
 - Entrada breve con la marca (1,6 s, solo la primera vez por sesión) y titular que entra palabra a palabra.
-- Portada: retrato editorial grande (marco fino, pie de foto, barras) con **looks arreglados/formales** que van pasando (`FORMALES`). Al hacer scroll se transforma en 4 tarjetas de estilo (fila en ordenador, 2×2 en móvil) que rotan fotos y enlazan a la galería. En móvil: texto → el retrato sube → tarjetas.
+- **Pensada primero para móvil** (la mayoría entra desde el móvil). La portada cabe en una pantalla: titular, visor de looks, gancho y botones. Sin huecos grandes entre secciones.
+- Portada: visor tipo «historias» (`#stage`) con los **looks arreglados** (`FORMALES`): foto entera sobre una copia desenfocada de sí misma, barras arriba y pie de foto. Ya no hay abanico de tarjetas.
+- Estilos: 4 tarjetas (una por estilo, 2×2 en móvil) con fotos que rotan; al tocar se abre ese estilo a pantalla completa (deslizar con el dedo) con botón «Quiero un look así · Reservar». Jano rechazó la galería horizontal que solo mostraba un estilo.
+- Frases de dolor: cada una entra desde un lado (alternando) al hacer scroll, estilo Apple.
 - CTA de portada muy visible: botón grande «Reserva tu cita gratis» con brillo y pulso, botones Llámame y WhatsApp, y atajo «Próximo hueco libre: hoy a las 16:30» que abre el formulario con esa hora. Gancho: «¿Sabes que puedes verte mejor pero no sabes por dónde empezar? Te regalo 20 minutos: me cuentas tu problema y te propongo cómo solucionarlo.» La consulta gratis es para escuchar el problema y proponer solución, **no** para dar la asesoría entera (que no se aprovechen solo de esa cita).
 - Retrato: recortes propios en `img/fotos/retrato/` (proporción 0,55, Jano centrado y grande, pies siempre dentro), generados desde la caja YOLO.
 - Frases de puntos de dolor que se iluminan palabra a palabra. **Nunca sexistas**: «la moda no tiene reglas», cualquier altura, cuerpo, piel o estilo.
@@ -52,7 +55,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Reglas de fotos (pedidas por Jano): Jano centrado, **nunca cortar cabeza ni zapatos**, y **solo una foto por outfit**. El centrado se hace con detección de persona (YOLO): los recortes solo quitan laterales, centrados en la caja de la persona (máx. 3:5). Nunca usar `object-fit: cover` con fotos de Jano en marcos de otra proporción.
 - Fotos repartidas sin repetir en `js/main.js`: `FORMALES` (retrato de portada), `PORTADA` (fotos de cada tarjeta, todas de 840 px de ancho para que encajen en 3:5 sin recorte), `GALERIA` y `SOBRE_MI` (rotan en «Sobre mí»). Categorías: streetwear, verano, chandal, arreglado. Al añadir fotos clásicas, crear «clásico» en `CATS` y `PORTADA`.
 - Descartadas por outfit repetido: 0629, 5327, 9421, 9738, 8057, 2241. Por calidad: 9065. No descargada (8 MB, demasiado grande para el conector): IMG_0870.JPG.
-- Efectos: abanico de la portada (`#hero-pin`, `#deck`), frases iluminadas (`.lit`), galería fijada al scroll con la foto central destacada (`#styles-pin`, `#gallery-track`), fotos de «Sobre mí» con barrido (`#about-frame`), calendario de mes (`#days`, `#slots`), lightbox, títulos palabra a palabra (`.split`) y scroll spy.
+- Efectos: visor de portada (`#stage`), frases que entran por los lados (`.lit`), tarjetas de estilo + lightbox (`#style-grid`), fotos de «Sobre mí» con barrido (`#about-frame`), calendario de mes (`#days`, `#slots`), lightbox, títulos palabra a palabra (`.split`) y scroll spy.
 - Vista previa privada: https://claude.ai/artifact/2FYycAd2ZJYSmznCAxgCzx
 
 ## Pendiente
