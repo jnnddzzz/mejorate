@@ -17,11 +17,17 @@ const CONFIG = {
 // Cada foto aparece una sola vez en toda la web. Todas miden 1400 px de alto; el número es su ancho.
 // Para añadir una: guárdala en img/fotos/ (y una pequeña en img/fotos/thumb/) y añádela a una lista.
 const CATS = { streetwear: "Streetwear", verano: "Verano", chandal: "Chándal", arreglado: "Arreglado" };
-const PORTADA = {            // Tarjetas de la portada: sus fotos van rotando
+const FORMALES = [          // Retrato de la portada: looks arreglados, van pasando
+  ["1676", "Camisa negra y recto"],
+  ["8356", "Camisa y vaquero"],
+  ["0412", "Cuero negro"],
+  ["6512", "Vaquero gris"]
+];
+const PORTADA = {            // Tarjetas de estilo (al hacer scroll): sus fotos van rotando
   streetwear: ["1810", "3160", "5430"],
   verano: ["8663", "2074", "9773"],
   chandal: ["4873", "9260"],
-  arreglado: ["0412", "6100", "8356"]
+  arreglado: ["0518", "6100"]
 };
 const GALERIA = [
   ["2329", "streetwear", 840], ["9048", "streetwear", 840], ["5131", "streetwear", 840],
@@ -29,9 +35,9 @@ const GALERIA = [
   ["2657", "verano", 785], ["9476", "verano", 840], ["2749", "verano", 762],
   ["8130", "verano", 840], ["0399", "verano", 840], ["8919", "verano", 840],
   ["2389", "chandal", 716], ["4436", "chandal", 840], ["0015", "chandal", 971],
-  ["0204", "arreglado", 598], ["0517", "arreglado", 812], ["0518", "arreglado", 840], ["1676", "arreglado", 716]
+  ["0204", "arreglado", 598], ["0517", "arreglado", 812]
 ].map(([id, cat, w]) => ({ id, cat, w, src: `img/fotos/jano-${id}.jpg` }));
-const SOBRE_MI = ["9547", "8698", "5439", "6512"];
+const SOBRE_MI = ["9547", "8698", "5439"];
 // =============================================
 
 const $ = (s, el = document) => el.querySelector(s);
@@ -88,7 +94,7 @@ if (skipIntro) {
   startHero();
 } else {
   document.body.classList.add("locked");
-  const first = Object.values(PORTADA).map(l => photo(l[0]));
+  const first = [photo(FORMALES[0][0]), ...Object.values(PORTADA).map(l => photo(l[0]))];
   let loaded = 0;
   const bar = $("#intro-bar");
   const t0 = performance.now();
@@ -160,12 +166,33 @@ deck.innerHTML = DECK.map(([cat, ids], i) => `
     <span class="card-info"><span class="card-name">${CATS[cat]}<small>${ids.length + GALERIA.filter(l => l.cat === cat).length} looks</small></span><span class="card-go" aria-hidden="true">→</span></span>
   </a>`).join("");
 const cards = $$(".card", deck);
+const portrait = $("#portrait");
+$("#portrait-frame").innerHTML = FORMALES.map(([id, name], i) =>
+  `<img src="${photo(id)}" alt="Jano: ${name.toLowerCase()}" ${i ? 'loading="lazy"' : 'fetchpriority="high"'} class="${i ? "" : "on"}">`).join("");
+$("#pc-bars").innerHTML = FORMALES.map((_, i) => `<i class="${i ? "" : "on"}"></i>`).join("");
+const pImgs = $$("#portrait-frame img"), pBars = $$("#pc-bars i");
+let pIdx = 0;
+const showPortrait = i => {
+  const prev = pIdx;
+  pIdx = (i + FORMALES.length) % FORMALES.length;
+  if (prev !== pIdx) {
+    pImgs.forEach(im => im.classList.remove("prev"));
+    pImgs[prev].classList.replace("on", "prev");
+    pImgs[pIdx].classList.add("on");
+  }
+  pBars.forEach((b, j) => b.classList.toggle("on", j === pIdx));
+  $("#pc-index").textContent = `${String(pIdx + 1).padStart(2, "0")} / ${String(FORMALES.length).padStart(2, "0")}`;
+  $("#pc-name").textContent = FORMALES[pIdx][1];
+};
+showPortrait(0);
 let geo = [];
 let heroP = 0;
+let heroMobile = false;
 
 const layoutDeck = () => {
   const W = stage.clientWidth, H = stage.clientHeight;
   const mobile = W < 760;
+  heroMobile = mobile;
   const gutter = Math.max(16, W * .04);
   const top0 = heroPick.offsetTop + heroPick.offsetHeight + (mobile ? 16 : 24);
   const bottomPad = mobile ? 96 : 40;                     // keep clear of the quick-actions bar
@@ -178,13 +205,15 @@ const layoutDeck = () => {
   const total = cols * cw + (cols - 1) * gap;
   const x0 = (W - total) / 2;
   const y0 = top0 + Math.max(0, (areaH - (rows * ch + (rows - 1) * gap)) / 2);
-  // where the fanned stack sits before you scroll
-  const s0 = mobile ? .78 : Math.min(1.25, (H * .64) / ch);
-  const introBottom = $(".hero-intro .actions").getBoundingClientRect().bottom - stage.getBoundingClientRect().top;
+  // the editorial portrait the cards grow out of
   const wrapRight = (W + Math.min(1200, W)) / 2 - gutter;
-  const Sx = mobile ? W / 2 : wrapRight - cw * s0 * .62;
-  const Sy = mobile ? Math.max(introBottom + ch * s0 * .5 + 30, H * .82) : H * .55;
-  const rot = [-10, -3.5, 3.5, 10], off = [-46, -15, 15, 46];
+  const ph = mobile ? Math.min(H * .66, (W - 64) / .55) : Math.min(H * .68, 640);
+  const pw = ph * .55;
+  const Sx = mobile ? W / 2 : wrapRight - pw / 2 - 12;
+  const Sy = mobile ? H * .5 + 20 : H * .5;
+  Object.assign(portrait.style, { width: `${pw}px`, height: `${ph}px`, left: `${Sx - pw / 2}px`, top: `${Sy - ph / 2 - 14}px` });
+  const s0 = ph / ch;
+  const rot = [0, 0, 0, 0], off = [0, 0, 0, 0];
   geo = cards.map((c, i) => {
     const col = i % cols, row = Math.floor(i / cols);
     const fx = x0 + col * (cw + gap), fy = y0 + row * (ch + gap);
@@ -194,32 +223,36 @@ const layoutDeck = () => {
     c.style.top = `${fy}px`;
     return { dx: Sx + off[i] * (mobile ? .6 : 1) - (fx + cw / 2), dy: Sy - (fy + ch / 2), rot: rot[i], s0 };
   });
-  heroPin.style.height = `${H * (mobile ? 2.1 : 2.3)}px`;
+  heroPin.style.height = `${H * (mobile ? 3.2 : 2.3)}px`;
 };
 
 let tFloat = 0;
 const renderHero = now => {
   const travel = heroPin.offsetHeight - stage.clientHeight;
   heroP = travel > 0 ? clamp(-heroPin.getBoundingClientRect().top / travel) : 1;
-  const e = ease(clamp((heroP - .04) / .62));
-  const float = reduceMotion ? 0 : (1 - e);
+  // mobile has three beats: the text, the portrait rising into view, then the cards
+  const e = heroMobile ? ease(clamp((heroP - .5) / .36)) : ease(clamp((heroP - .04) / .62));
+  const rise = heroMobile ? 1 - ease(clamp((heroP - .1) / .28)) : 0;
   tFloat = now / 1000;
   cards.forEach((c, i) => {
     const g = geo[i];
     if (!g) return;
-    const wob = Math.sin(tFloat * 1.1 + i * 1.3) * 6 * float;
-    const tx = g.dx * (1 - e) + Math.sin(tFloat * .8 + i) * 4 * float;
-    const ty = g.dy * (1 - e) + wob;
-    const r = g.rot * (1 - e) + Math.sin(tFloat * .9 + i * 2) * 1.2 * float;
+    const tx = g.dx * (1 - e), ty = g.dy * (1 - e);
     const s = lerp(g.s0, 1, e);
-    c.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0) rotate(${r.toFixed(2)}deg) scale(${s.toFixed(3)})`;
-    c.style.setProperty("--info", clamp((heroP - .55) / .25).toFixed(3));
+    c.style.transform = `translate3d(${tx.toFixed(1)}px,${ty.toFixed(1)}px,0) scale(${s.toFixed(3)})`;
+    c.style.opacity = clamp((e - .12) / .25).toFixed(3);
+    c.style.visibility = e <= .12 ? "hidden" : "visible";
+    c.style.setProperty("--info", clamp((e - .75) / .25).toFixed(3));
   });
-  const fade = clamp(heroP / .32);
+  const pf = clamp(e / .3);
+  portrait.style.opacity = (1 - pf).toFixed(3);
+  portrait.style.transform = `translate3d(0,${(rise * stage.clientHeight * .75 - pf * 24).toFixed(1)}px,0) scale(${(1 - pf * .06).toFixed(3)})`;
+  portrait.style.visibility = pf >= 1 ? "hidden" : "visible";
+  const fade = clamp(heroP / (heroMobile ? .22 : .32));
   heroIntro.style.opacity = (1 - fade).toFixed(3);
   heroIntro.style.transform = `translate3d(0,${(-fade * 70).toFixed(1)}px,0)`;
   heroIntro.style.visibility = fade >= 1 ? "hidden" : "visible";
-  const pk = clamp((heroP - .42) / .25);
+  const pk = heroMobile ? clamp((heroP - .62) / .2) : clamp((heroP - .42) / .25);
   heroPick.style.opacity = pk.toFixed(3);
   heroPick.style.transform = `translate3d(0,${((1 - pk) * 30).toFixed(1)}px,0)`;
   heroPick.classList.toggle("live", pk > .5);
@@ -234,6 +267,11 @@ const heroLoop = now => {
 };
 layoutDeck();
 requestAnimationFrame(heroLoop);
+
+// The portrait shows the formal looks one after another
+if (!reduceMotion) setInterval(() => {
+  if (!document.hidden && heroVisible && portrait.style.visibility !== "hidden") showPortrait(pIdx + 1);
+}, 3600);
 
 // Each card cycles through its own photos
 let cyc = 0;
@@ -540,6 +578,32 @@ $("#slots").addEventListener("click", e => {
   setTimeout(() => $("#f-nombre").focus({ preventScroll: true }), 400);
 });
 $$("[data-back]", booker).forEach(b => b.addEventListener("click", () => goStep(0)));
+
+// Hero shortcut: the next free time, one tap to the form
+const fmtShort = new Intl.DateTimeFormat("es-ES", { weekday: "long", day: "numeric" });
+const nextSlot = (() => {
+  for (let d = new Date(today); d <= lastDay; d.setDate(d.getDate() + 1)) {
+    const list = slotsFor(d);
+    if (list.length) return { date: new Date(d), time: list[0] };
+  }
+  return null;
+})();
+if (nextSlot) {
+  const isToday = nextSlot.date.getTime() === today.getTime();
+  const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
+  const when = isToday ? "hoy" : nextSlot.date.getTime() === tomorrow.getTime() ? "mañana" : fmtShort.format(nextSlot.date);
+  $("#next-slot-text").textContent = `${when} a las ${nextSlot.time}`;
+  $("#next-slot").hidden = false;
+  $("#next-slot").addEventListener("click", () => {
+    viewMonth = new Date(nextSlot.date.getFullYear(), nextSlot.date.getMonth(), 1);
+    chooseDay(new Date(nextSlot.date));
+    pick.time = nextSlot.time;
+    $("#chosen-slot").textContent = `${cap(fmtLong.format(pick.date))} · ${pick.time}`;
+    goStep(1);
+    scrollTo({ top: booker.getBoundingClientRect().top + scrollY - 90, behavior: reduceMotion ? "auto" : "smooth" });
+    setTimeout(() => $("#f-nombre").focus({ preventScroll: true }), 900);
+  });
+}
 
 // open on the first day with free times
 (() => {
