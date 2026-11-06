@@ -39,8 +39,8 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Frases de dolor: cada una entra desde un lado (alternando) al hacer scroll, estilo Apple.
 - CTA de portada muy visible: botón grande «Reserva tu cita gratis» con brillo y pulso, botones Llámame y WhatsApp, y atajo «Próximo hueco libre: hoy a las 16:30» que abre el formulario con esa hora. Gancho: «¿Sabes que puedes verte mejor pero no sabes por dónde empezar? Te regalo 20 minutos: me cuentas tu problema y te propongo cómo solucionarlo.» La consulta gratis es para escuchar el problema y proponer solución, **no** para dar la asesoría entera (que no se aprovechen solo de esa cita).
 - Retrato: recortes propios en `img/fotos/retrato/` (proporción 0,55, Jano centrado y grande, pies siempre dentro), generados desde la caja YOLO.
-- Frases de puntos de dolor que se iluminan palabra a palabra. **Nunca sexistas**: «la moda no tiene reglas», cualquier altura, cuerpo, piel o estilo.
-- **Ninguna foto parada ni repetida** en toda la web. Cada foto se usa una sola vez (portada, galería o «Sobre mí»).
+- Frases de puntos de dolor **nunca sexistas**: «la moda no tiene reglas», cualquier altura, cuerpo, piel o estilo.
+- **Ninguna foto parada ni repetida** en la página: cada foto aparece una vez (portada, tarjetas de estilo, «Sobre mí»); el visor a pantalla completa de cada estilo muestra todas las de ese estilo.
 - Cursor propio con etiqueta («Ver looks», «Ampliar») y botones magnéticos en ordenador.
 - Oscuro, paneles de cristal ahumado, acento degradado cromado en los titulares en cursiva.
 - Tipografías: Instrument Serif (titulares) + Inter (texto) + JetBrains Mono (etiquetas).
