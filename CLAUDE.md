@@ -26,7 +26,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Datos que se piden (formulario corto, a petición de Jano): nombre, edad, sexo, teléfono, con qué te ayudo y modalidad. **No** se pide el problema (lo cuentan en la cita).
 - Botones de llamar (`tel:`) y WhatsApp siempre visibles (barra flotante `.quick`).
 - Horario real: **lunes a viernes de 16:30 a 21:30, citas de 20 min** (`CONFIG.horario` en `js/main.js`). Calendario de mes completo, grande, con las horas al lado.
-- Los datos se guardan si `CONFIG.formEndpoint` apunta a Formspree o a un Google Apps Script (ver `RESERVAS.md`). El Google Drive de Jano estaba lleno, por eso no se creó la hoja.
+- Los datos se guardan en **Formspree** (`CONFIG.formEndpoint` = `https://formspree.io/f/mjyyzqkr`): cada reserva llega por email y queda en el panel. Plan gratis: 50 envíos/mes. Ver `RESERVAS.md`.
 - Botones de WhatsApp con `wa.me` y mensaje prellenado.
 
 ## Diseño
@@ -62,7 +62,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - [x] Fotos de Jano de Drive (34 looks).
 - [ ] Fotos de estilo clásico (Jano las subirá).
 - [x] Número de WhatsApp real (+34 659 50 69 79).
-- [ ] Activar guardado de reservas (`formEndpoint`, ver `RESERVAS.md`).
+- [x] Guardado de reservas activo con Formspree (`https://formspree.io/f/mjyyzqkr`). Llega al email de Jano y queda en su panel de Formspree.
 - [x] Horario real: L–V 16:30–21:30, citas de 20 min.
 - [x] Zona para el servicio en persona: Cádiz.
 - [x] GitHub Pages activo: https://jnnddzzz.github.io/mejorate/

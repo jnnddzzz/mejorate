@@ -5,7 +5,7 @@ const CONFIG = {
 
   // Dónde se guardan las reservas. Pega aquí la URL de tu formulario de Formspree
   // (https://formspree.io/f/xxxxxxx) o de tu Google Apps Script. Vacío = solo WhatsApp.
-  formEndpoint: "",
+  formEndpoint: "https://formspree.io/f/mjyyzqkr",
 
   // Horario de citas: días (1 = lunes … 5 = viernes, 6 = sábado, 0 = domingo), franja y duración.
   horario: { dias: [1, 2, 3, 4, 5], inicio: "16:30", fin: "21:30", minutos: 20 },
