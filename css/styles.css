@@ -239,13 +239,15 @@ h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(56px, 6.4vw, 
 
 /* ---------- Pain points: each sentence slides in from its own side as you scroll ---------- */
 .pains { padding-bottom: clamp(60px, 9vw, 120px); }
-.pain-lines { display: grid; gap: clamp(26px, 4vw, 48px); margin-bottom: clamp(56px, 9vw, 110px); }
-.lit { font-family: var(--serif); font-size: clamp(30px, 4.6vw, 64px); line-height: 1.06; letter-spacing: -.01em; max-width: 17ch; will-change: transform, opacity, filter; }
-.lit:nth-child(even) { margin-left: auto; text-align: right; }
+.pain-lines { display: grid; gap: clamp(10px, 1.6vw, 22px); margin-bottom: clamp(56px, 9vw, 110px); }
+.lit { font-family: var(--serif); font-size: clamp(44px, 7.2vw, 112px); line-height: .98; letter-spacing: -.03em; max-width: 14ch; text-wrap: balance; will-change: transform, opacity, filter; transform-origin: left center; }
+.lit em { font-style: italic; background: var(--chrome); background-size: 200% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: sheen 7s linear infinite; padding-right: .06em; }
+.lit:nth-child(even) { margin-left: auto; text-align: right; transform-origin: right center; }
+@media (min-width: 901px) { .lit { max-width: 12ch; } .lit + .lit { margin-top: -1.15em; } }
 .pain-answer { max-width: 760px; }
 .answer-big { font-family: var(--serif); font-size: clamp(32px, 4.4vw, 60px); line-height: 1.05; letter-spacing: -.01em; margin-bottom: 20px; }
 .answer-sub { color: var(--muted); font-size: 18px; max-width: 560px; margin-bottom: 28px; }
-@media (max-width: 760px) { .lit { max-width: 15ch; } .answer-sub { font-size: 16px; } }
+@media (max-width: 760px) { .lit { font-size: clamp(40px, 11.6vw, 54px); max-width: 12ch; } .pain-lines { gap: 14px; margin-bottom: 56px; } .pains { padding-bottom: 24px; } .answer-sub { font-size: 16px; } }
 
 /* What I do */
 .services { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; perspective: 1200px; }

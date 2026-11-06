@@ -351,7 +351,7 @@ const onFrame = () => {
     if (r.bottom < -100 || r.top > vh + 100) return;
     const p = ease(clamp((vh * .92 - r.top) / (vh * .38)));
     const dir = i % 2 ? 1 : -1;
-    line.style.transform = `translate3d(${((1 - p) * dir * 80).toFixed(1)}px,${((1 - p) * 30).toFixed(1)}px,0)`;
+    line.style.transform = `translate3d(${((1 - p) * dir * 120).toFixed(1)}px,${((1 - p) * 20).toFixed(1)}px,0) scale(${(.9 + p * .1).toFixed(3)})`;
     line.style.opacity = (.08 + p * .92).toFixed(3);
     line.style.filter = p > .99 ? "none" : `blur(${((1 - p) * 10).toFixed(1)}px)`;
   });
