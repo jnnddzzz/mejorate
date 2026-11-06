@@ -31,11 +31,10 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 
 ## Diseño
 - Experiencia **inusual, inmersiva y «dopamínica» pero intuitiva**, minimalista, sin saturar. Nivel de estudio de animación.
-- Jano rechazó: fondo de fotos que cambiaban, anillo 3D, burbujas, carrusel de fotos repetidas, visores de fotos en la portada (quiere texto y botones arriba, fotos más abajo).
+- Jano rechazó: fondo de fotos que cambiaban, anillo 3D, burbujas, carrusel de fotos repetidas, portada sin fotos.
 - Entrada breve con la marca (1,6 s, solo la primera vez por sesión) y titular que entra palabra a palabra.
 - **Pensada primero para móvil** (la mayoría entra desde el móvil). Sin huecos grandes entre secciones.
-- **Portada sin fotos** (quien llega ya conoce a Jano): lo principal son las frases y los botones. Titular grande, frase de dolor rotatoria («¿Te suena?» + `DOLORES`), gancho y botones. En ordenador, a la derecha, tarjeta «Tu consulta gratis» con las 3 próximas horas libres (`#consult`) que abren el formulario con esa hora.
-- Los looks arreglados (`FORMALES`, recortes de `img/fotos/retrato/`) abren la rotación de fotos de «Sobre mí».
+- Portada: lo principal son las frases y los botones (titular, frase de dolor rotatoria «¿Te suena?» + `DOLORES`, gancho, botones), pero **sí con foto**: visor tipo historias (`#stage`) con los **looks arreglados** (`FORMALES`). En ordenador el visor va a la derecha del texto; en móvil va **debajo** del texto y los botones. (Jano probó una portada sin fotos y no le gustó; tampoco quiere la foto antes del texto en móvil.)
 - Estilos: 4 tarjetas (una por estilo, 2×2 en móvil) con fotos que rotan; al tocar se abre ese estilo a pantalla completa (deslizar con el dedo) con botón «Quiero un look así · Reservar». Jano rechazó la galería horizontal que solo mostraba un estilo.
 - Frases de dolor: cada una entra desde un lado (alternando) al hacer scroll, estilo Apple.
 - CTA de portada muy visible: botón grande «Reserva tu cita gratis» con brillo y pulso, botones Llámame y WhatsApp, y atajo «Próximo hueco libre: hoy a las 16:30» que abre el formulario con esa hora. Gancho: «¿Sabes que puedes verte mejor pero no sabes por dónde empezar? Te regalo 20 minutos: me cuentas tu problema y te propongo cómo solucionarlo.» La consulta gratis es para escuchar el problema y proponer solución, **no** para dar la asesoría entera (que no se aprovechen solo de esa cita).
@@ -54,9 +53,9 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Configuración editable al principio de `js/main.js` (`CONFIG`): teléfono (llamadas y WhatsApp), `formEndpoint`, horario y días de antelación.
 - Fotos en `img/fotos/jano-XXXX.jpg` (1400 px) y `img/fotos/thumb/` (420 px). Salen de Google Drive, carpeta «mis fotos» y su subcarpeta «chandalesç».
 - Reglas de fotos (pedidas por Jano): Jano centrado, **nunca cortar cabeza ni zapatos**, y **solo una foto por outfit**. El centrado se hace con detección de persona (YOLO): los recortes solo quitan laterales, centrados en la caja de la persona (máx. 3:5). Nunca usar `object-fit: cover` con fotos de Jano en marcos de otra proporción.
-- Fotos repartidas sin repetir en `js/main.js`: `FORMALES` (abren «Sobre mí»), `PORTADA` (fotos de cada tarjeta, todas de 840 px de ancho para que encajen en 3:5 sin recorte), `GALERIA` y `SOBRE_MI` (rotan en «Sobre mí»). Categorías: streetwear, verano, chandal, arreglado. Al añadir fotos clásicas, crear «clásico» en `CATS` y `PORTADA`.
+- Fotos repartidas sin repetir en `js/main.js`: `FORMALES` (visor de portada), `PORTADA` (fotos de cada tarjeta, todas de 840 px de ancho para que encajen en 3:5 sin recorte), `GALERIA` y `SOBRE_MI` (rotan en «Sobre mí»). Categorías: streetwear, verano, chandal, arreglado. Al añadir fotos clásicas, crear «clásico» en `CATS` y `PORTADA`.
 - Descartadas por outfit repetido: 0629, 5327, 9421, 9738, 8057, 2241. Por calidad: 9065. No descargada (8 MB, demasiado grande para el conector): IMG_0870.JPG.
-- Efectos: frase de dolor rotatoria en portada (`#pr-text`), tarjeta de próximas horas (`#consult`), frases que entran por los lados (`.lit`), tarjetas de estilo + lightbox (`#style-grid`), fotos de «Sobre mí» con barrido (`#about-frame`), calendario de mes (`#days`, `#slots`), lightbox, títulos palabra a palabra (`.split`) y scroll spy.
+- Efectos: frase de dolor rotatoria en portada (`#pr-text`), visor de looks arreglados (`#stage`), frases que entran por los lados (`.lit`), tarjetas de estilo + lightbox (`#style-grid`), fotos de «Sobre mí» con barrido (`#about-frame`), calendario de mes (`#days`, `#slots`), lightbox, títulos palabra a palabra (`.split`) y scroll spy.
 - Vista previa privada: https://claude.ai/artifact/2FYycAd2ZJYSmznCAxgCzx
 
 ## Pendiente
