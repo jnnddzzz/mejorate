@@ -18,10 +18,10 @@ const CONFIG = {
 // Para añadir una: guárdala en img/fotos/ (y una pequeña en img/fotos/thumb/) y añádela a una lista.
 const CATS = { streetwear: "Streetwear", verano: "Verano", chandal: "Chándal", arreglado: "Arreglado" };
 const FORMALES = [          // Retrato de la portada: looks arreglados, van pasando
-  ["1676", "Camisa negra y recto"],
-  ["8356", "Camisa y vaquero"],
-  ["0412", "Cuero negro"],
-  ["6512", "Vaquero gris"]
+  ["1676", "Cuero negro y recto"],
+  ["8356", "Vaquero oscuro"],
+  ["0412", "Cuero y estampado"],
+  ["6512", "Cuero y cruces"]
 ];
 const PORTADA = {            // Tarjetas de estilo (al hacer scroll): sus fotos van rotando
   streetwear: ["1810", "3160", "5430"],
@@ -94,7 +94,7 @@ if (skipIntro) {
   startHero();
 } else {
   document.body.classList.add("locked");
-  const first = [photo(FORMALES[0][0]), ...Object.values(PORTADA).map(l => photo(l[0]))];
+  const first = [`img/fotos/retrato/jano-${FORMALES[0][0]}.jpg`, ...Object.values(PORTADA).map(l => photo(l[0]))];
   let loaded = 0;
   const bar = $("#intro-bar");
   const t0 = performance.now();
@@ -168,7 +168,7 @@ deck.innerHTML = DECK.map(([cat, ids], i) => `
 const cards = $$(".card", deck);
 const portrait = $("#portrait");
 $("#portrait-frame").innerHTML = FORMALES.map(([id, name], i) =>
-  `<img src="${photo(id)}" alt="Jano: ${name.toLowerCase()}" ${i ? 'loading="lazy"' : 'fetchpriority="high"'} class="${i ? "" : "on"}">`).join("");
+  `<img src="img/fotos/retrato/jano-${id}.jpg" alt="Jano: ${name.toLowerCase()}" ${i ? 'loading="lazy"' : 'fetchpriority="high"'} class="${i ? "" : "on"}">`).join("");
 $("#pc-bars").innerHTML = FORMALES.map((_, i) => `<i class="${i ? "" : "on"}"></i>`).join("");
 const pImgs = $$("#portrait-frame img"), pBars = $$("#pc-bars i");
 let pIdx = 0;

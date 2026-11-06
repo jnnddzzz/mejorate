@@ -34,7 +34,8 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Jano rechazó: fondo de fotos que cambiaban, anillo 3D, burbujas, carrusel de fotos repetidas, y un visor de historias pequeño en la portada.
 - Entrada breve con la marca (1,6 s, solo la primera vez por sesión) y titular que entra palabra a palabra.
 - Portada: retrato editorial grande (marco fino, pie de foto, barras) con **looks arreglados/formales** que van pasando (`FORMALES`). Al hacer scroll se transforma en 4 tarjetas de estilo (fila en ordenador, 2×2 en móvil) que rotan fotos y enlazan a la galería. En móvil: texto → el retrato sube → tarjetas.
-- CTA de portada muy visible: botón grande «Reserva tu cita gratis» con brillo y pulso, botones Llámame y WhatsApp, y atajo «Próximo hueco libre: hoy a las 16:30» que abre el formulario con esa hora. Gancho: «¿Sabes que puedes verte mejor pero no sabes por dónde empezar? En 20 minutos te digo qué te favorece. Gratis.»
+- CTA de portada muy visible: botón grande «Reserva tu cita gratis» con brillo y pulso, botones Llámame y WhatsApp, y atajo «Próximo hueco libre: hoy a las 16:30» que abre el formulario con esa hora. Gancho: «¿Sabes que puedes verte mejor pero no sabes por dónde empezar? Te regalo 20 minutos: me cuentas tu problema y te propongo cómo solucionarlo.» La consulta gratis es para escuchar el problema y proponer solución, **no** para dar la asesoría entera (que no se aprovechen solo de esa cita).
+- Retrato: recortes propios en `img/fotos/retrato/` (proporción 0,55, Jano centrado y grande, pies siempre dentro), generados desde la caja YOLO.
 - Frases de puntos de dolor que se iluminan palabra a palabra. **Nunca sexistas**: «la moda no tiene reglas», cualquier altura, cuerpo, piel o estilo.
 - **Ninguna foto parada ni repetida** en toda la web. Cada foto se usa una sola vez (portada, galería o «Sobre mí»).
 - Cursor propio con etiqueta («Ver looks», «Ampliar») y botones magnéticos en ordenador.
