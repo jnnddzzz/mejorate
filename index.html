@@ -47,31 +47,34 @@
   </header>
 
   <main>
-    <!-- HERO: headline, rotating pain point, hook and booking; the formal looks beside it (below it on phones). -->
+    <!-- HERO: words first. Headline, rotating pain point, hook and booking; on desktop, the free video call card. -->
     <section class="hero" id="inicio">
       <div class="wrap hero-grid">
         <div class="hero-title">
-          <p class="pill"><span class="dot"></span> Primera consulta <strong>gratis</strong> · 20 min</p>
+          <p class="pill"><span class="dot"></span> Primera videollamada <strong>gratis</strong> · 20 min</p>
           <h1 class="split">Saca el máximo partido a <em>tu imagen.</em></h1>
           <p class="pain-rotator" aria-live="polite"><span class="pr-label">¿Te suena?</span><span class="pr-text" id="pr-text">Tienes el armario lleno y nada que ponerte.</span></p>
         </div>
 
-        <div class="stage-wrap" id="stage-wrap">
-          <figure class="stage" id="stage" aria-roledescription="carrusel" aria-label="Looks arreglados de Jano">
-            <div class="stage-frame" id="stage-frame"></div>
-            <div class="stage-bars" id="stage-bars"></div>
-            <figcaption class="stage-cap"><span class="sc-index" id="sc-index"></span><span class="sc-name" id="sc-name"></span></figcaption>
-            <button type="button" class="stage-hit prev" id="stage-prev" aria-label="Look anterior"></button>
-            <button type="button" class="stage-hit next" id="stage-next" aria-label="Look siguiente"></button>
-          </figure>
-        </div>
+        <!-- Consultation card: what you get, and the next free times one tap away -->
+        <aside class="consult" id="consult" aria-label="Tu consulta gratis">
+          <p class="consult-eyebrow"><span class="dot"></span> Tu consulta gratis</p>
+          <ul class="consult-list">
+            <li><strong>20 min</strong><span>Videollamada: me cuentas tu problema y te propongo una solución</span></li>
+            <li><strong>Gratis</strong><span>Sin compromiso, desde donde estés</span></li>
+            <li><strong>L – V</strong><span>De 16:30 a 21:30</span></li>
+          </ul>
+          <p class="consult-label">Próximas horas libres</p>
+          <div class="consult-slots" id="consult-slots"></div>
+          <a href="#reservar" class="consult-more">Ver todo el calendario →</a>
+        </aside>
 
         <div class="hero-body">
-          <p class="hook">¿Sabes que puedes verte mejor pero no sabes por dónde empezar? <strong>Te regalo 20 minutos: me cuentas tu problema y te propongo cómo solucionarlo.</strong></p>
+          <p class="hook">¿Sabes que puedes verte mejor pero no sabes por dónde empezar? <strong>Te regalo una videollamada de 20 minutos: me cuentas tu problema y te propongo cómo solucionarlo.</strong></p>
             <div class="hero-cta">
               <a href="#reservar" class="cta-main magnetic">
                 <span class="cta-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 2v2H5a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2V2h-2v2H9V2H7Zm12 7v10H5V9h14Z"/></svg></span>
-                <span class="cta-text"><strong>Reserva tu cita gratis</strong><small>20 min · elige día y hora</small></span>
+                <span class="cta-text"><strong>Reserva tu cita gratis</strong><small>Videollamada de 20 min · elige día y hora</small></span>
                 <span class="cta-arrow" aria-hidden="true">→</span>
               </a>
               <div class="cta-row">
@@ -144,7 +147,7 @@
         </div>
         <ol class="steps">
           <li class="reveal"><span>01</span><h3>Reservas tu cita gratis</h3><p>Eliges día y hora en el calendario, o me llamas.</p></li>
-          <li class="reveal"><span>02</span><h3>Hablamos 20 minutos</h3><p>Me cuentas qué quieres mejorar y vemos cómo te puedo ayudar.</p></li>
+          <li class="reveal"><span>02</span><h3>Videollamada de 20 minutos</h3><p>Me cuentas qué quieres mejorar y vemos cómo te puedo ayudar.</p></li>
           <li class="reveal"><span>03</span><h3>Te asesoro</h3><p>Online o en persona, me encargo de que saques tu mejor versión.</p></li>
         </ol>
         <div class="modes">
@@ -201,7 +204,7 @@
           <div>
             <p class="eyebrow reveal">Reservar</p>
             <h2 class="title split">Tu primera consulta es <em>gratis.</em></h2>
-            <p class="muted reveal">20 minutos, de lunes a viernes de 16:30 a 21:30. Elige día y hora y te confirmo por WhatsApp.</p>
+            <p class="muted reveal">Videollamada de 20 minutos, de lunes a viernes de 16:30 a 21:30. Elige día y hora y te mando el enlace por WhatsApp.</p>
           </div>
           <div class="contact-card reveal">
             <p class="muted small">¿Prefieres hablar ya?</p>
@@ -274,8 +277,20 @@
                   <option>Cambio de imagen completo</option>
                 </select>
               </label>
+              <label class="field field-full"><span>¿Qué estilo quieres transmitir?</span>
+                <select id="f-estilo" name="estilo" required>
+                  <option value="" selected disabled>Elige un estilo</option>
+                  <option>Clásico / elegante</option>
+                  <option>Arreglado pero informal</option>
+                  <option>Streetwear</option>
+                  <option>Casual del día a día</option>
+                  <option>Deportivo / chándal</option>
+                  <option>Minimalista</option>
+                  <option>No lo sé, quiero que me aconsejes</option>
+                </select>
+              </label>
               <fieldset class="field field-full">
-                <legend>¿Cómo prefieres?</legend>
+                <legend>Después de la videollamada, ¿cómo prefieres la asesoría?</legend>
                 <div class="seg">
                   <label><input type="radio" name="modalidad" value="Online" checked><span>Online</span></label>
                   <label><input type="radio" name="modalidad" value="En persona (Cádiz)"><span>En persona · Cádiz</span></label>
@@ -307,7 +322,7 @@
           <h2 class="title split">Antes de <em>reservar.</em></h2>
         </div>
         <div class="faq reveal">
-          <details><summary>¿La primera consulta es gratis de verdad?</summary><p>Sí. Son 20 minutos: me cuentas qué quieres mejorar y te digo cómo te puedo ayudar. Sin compromiso.</p></details>
+          <details><summary>¿La primera consulta es gratis de verdad?</summary><p>Sí. Es una videollamada de 20 minutos: me cuentas qué quieres mejorar y te digo cómo te puedo ayudar. Sin compromiso.</p></details>
           <details><summary>¿Dónde puedo verte en persona?</summary><p>Solo en Cádiz. Si vives en otro sitio, te asesoro online por videollamada y WhatsApp.</p></details>
           <details><summary>¿Sirve para mi tipo de cuerpo?</summary><p>Sí. Trabajo con cualquier altura, cuerpo, tono de piel y estilo. Todo se adapta a ti.</p></details>
           <details><summary>¿Tengo que gastar mucho en ropa?</summary><p>No. Me adapto a tu presupuesto y a lo que ya tienes en el armario.</p></details>
