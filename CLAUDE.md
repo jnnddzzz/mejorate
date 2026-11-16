@@ -63,7 +63,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - [x] Fotos de Jano de Drive (34 looks).
 - [ ] Fotos de estilo clásico (Jano las subirá).
 - [x] Número de WhatsApp real (+34 659 50 69 79).
-- [ ] Conectar la hoja de Google Sheets: Jano debe publicar el Apps Script y pasar la URL `/exec` para `sheetsEndpoint`.
+- [x] Hoja de Google Sheets conectada (`sheetsEndpoint` con la URL /exec de Apps Script). Pendiente que Jano confirme con una reserva de prueba que entra la fila.
 - [x] Guardado de reservas activo con Formspree (`https://formspree.io/f/mjyyzqkr`). Llega al email de Jano y queda en su panel de Formspree.
 - [x] Horario real: L–V 16:30–21:30, citas de 20 min.
 - [x] Zona para el servicio en persona: Cádiz.

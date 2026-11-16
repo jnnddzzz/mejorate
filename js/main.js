@@ -7,7 +7,7 @@ const CONFIG = {
   // (https://formspree.io/f/xxxxxxx) o de tu Google Apps Script. Vacío = solo WhatsApp.
   formEndpoint: "https://formspree.io/f/mjyyzqkr",
   // Hoja de cálculo «Mejórate · Reservas» en Google Drive: pega aquí la URL /exec de Apps Script.
-  sheetsEndpoint: "",
+  sheetsEndpoint: "https://script.google.com/macros/s/AKfycbyNL9RGIpkgyhDXN_kRg15kZW_2MD-Nvm4A35qZY-TbPtWiKNiwct0z2icQWJumkak0ow/exec",
 
   // Horario de citas: días (1 = lunes … 5 = viernes, 6 = sábado, 0 = domingo), franja y duración.
   horario: { dias: [1, 2, 3, 4, 5], inicio: "16:30", fin: "21:30", minutos: 20 },
