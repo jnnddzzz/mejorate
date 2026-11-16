@@ -26,7 +26,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - La primera cita es una **videollamada** de 20 min (gratis).
 - Datos que se piden (formulario corto, a petición de Jano): nombre, edad, sexo, teléfono, con qué te ayudo, **qué estilo quiere transmitir**, **presupuesto** y cómo prefiere la asesoría después (online o en persona en Cádiz). **No** se pide el problema (lo cuentan en la cita).
 - **Solo se puede contactar reservando** (a petición de Jano): no hay botones de llamar ni de WhatsApp directo; la barra flotante `.quick` solo tiene «Reservar cita». El único WhatsApp es el de confirmación al terminar la reserva.
-- Horario real: **lunes a viernes de 16:30 a 21:30, citas de 20 min** (`CONFIG.horario` en `js/main.js`). Calendario de mes completo, grande, con las horas al lado.
+- Horario real: **lunes a jueves de 15:30 a 20:30, citas de 20 min** (`CONFIG.horario` en `js/main.js`). Calendario de mes completo, grande, con las horas al lado.
 - Los datos van a la hoja de Google Sheets **«Mejórate · Reservas»** en el Drive de Jano (id `1kKABuW8hjRFgCoUOWmjXPUu_2R7xNDAmTNMcLpCB0Oc`) vía Apps Script (`CONFIG.sheetsEndpoint`, pasos en `RESERVAS.md`), con columna Estado. Además van a **Formspree** (`CONFIG.formEndpoint` = `https://formspree.io/f/mjyyzqkr`): cada reserva llega por email y queda en el panel. Plan gratis: 50 envíos/mes. Ver `RESERVAS.md`.
 - Botones de WhatsApp con `wa.me` y mensaje prellenado.
 
@@ -38,7 +38,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Portada **sin fotos** (decisión final de Jano tras probar varias versiones): titular, frase de dolor rotatoria («¿Te suena?» + `DOLORES`), gancho y botones. En ordenador, a la derecha, tarjeta «Tu consulta gratis» (`#consult`) con las 3 próximas horas libres. Los looks arreglados (`FORMALES`) abren la rotación de «Sobre mí».
 - Estilos: 4 tarjetas (una por estilo, 2×2 en móvil) con fotos que rotan; al tocar se abre ese estilo a pantalla completa (deslizar con el dedo) con botón «Quiero un look así · Reservar». Jano rechazó la galería horizontal que solo mostraba un estilo.
 - Frases de dolor: muy grandes, encajadas en zigzag sin huecos, con el final en cursiva cromada; cada una entra desde un lado (alternando) con un ligero zoom al hacer scroll, estilo Apple.
-- CTA de portada muy visible: botón grande «Reserva tu cita gratis» con brillo y pulso, y atajo «Próximo hueco libre: hoy a las 16:30» que abre el formulario con esa hora. Gancho: «¿Sabes que puedes verte mejor pero no sabes por dónde empezar? Te regalo 20 minutos: me cuentas tu problema y te propongo cómo solucionarlo.» La consulta gratis es para escuchar el problema y proponer solución, **no** para dar la asesoría entera (que no se aprovechen solo de esa cita).
+- CTA de portada muy visible: botón grande «Reserva tu cita gratis» con brillo y pulso, y atajo «Próximo hueco libre» que abre el formulario con esa hora. Gancho: «¿Sabes que puedes verte mejor pero no sabes por dónde empezar? Te regalo 20 minutos: me cuentas tu problema y te propongo cómo solucionarlo.» La consulta gratis es para escuchar el problema y proponer solución, **no** para dar la asesoría entera (que no se aprovechen solo de esa cita).
 - Retrato: recortes propios en `img/fotos/retrato/` (proporción 0,55, Jano centrado y grande, pies siempre dentro), generados desde la caja YOLO.
 - Frases de puntos de dolor **nunca sexistas**: «la moda no tiene reglas», cualquier altura, cuerpo, piel o estilo.
 - **Ninguna foto parada ni repetida** en la página: cada foto aparece una vez (portada, tarjetas de estilo, «Sobre mí»); el visor a pantalla completa de cada estilo muestra todas las de ese estilo.
@@ -65,7 +65,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - [x] Número de WhatsApp real (+34 659 50 69 79).
 - [x] Hoja de Google Sheets conectada (`sheetsEndpoint` con la URL /exec de Apps Script). Pendiente que Jano confirme con una reserva de prueba que entra la fila.
 - [x] Guardado de reservas activo con Formspree (`https://formspree.io/f/mjyyzqkr`). Llega al email de Jano y queda en su panel de Formspree.
-- [x] Horario real: L–V 16:30–21:30, citas de 20 min.
+- [x] Horario real: L–J 15:30–20:30, citas de 20 min.
 - [x] Zona para el servicio en persona: Cádiz.
 - [x] GitHub Pages activo: https://jnnddzzz.github.io/mejorate/
 - [ ] Testimonios reales de clientes (no inventarlos).

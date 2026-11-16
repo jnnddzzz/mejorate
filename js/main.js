@@ -10,7 +10,7 @@ const CONFIG = {
   sheetsEndpoint: "https://script.google.com/macros/s/AKfycbyNL9RGIpkgyhDXN_kRg15kZW_2MD-Nvm4A35qZY-TbPtWiKNiwct0z2icQWJumkak0ow/exec",
 
   // Horario de citas: días (1 = lunes … 5 = viernes, 6 = sábado, 0 = domingo), franja y duración.
-  horario: { dias: [1, 2, 3, 4, 5], inicio: "16:30", fin: "21:30", minutos: 20 },
+  horario: { dias: [1, 2, 3, 4], inicio: "15:30", fin: "20:30", minutos: 20 },
   diasVista: 45,             // Cuántos días hacia delante se puede reservar
   avisoMinimoHoras: 3        // Antelación mínima para reservar
 };
