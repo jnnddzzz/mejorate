@@ -14,7 +14,7 @@ Web de **asesoría de imagen** donde los clientes se informan, confían en Jano 
 Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse o sacarse partido.
 
 ## Servicio (lo que vende Jano: su tiempo)
-- Especialidad principal: **vestimenta**. También: colorimetría, corte de pelo y barba, cejas según la cara, facciones.
+- Especialidad principal: **vestimenta**. También: colorimetría y barbería (corte, barba y cejas). Jano quitó «facciones».
 - Enfoque: sacar el máximo partido a la forma de cuerpo y la cara de cada cliente. «La moda no tiene reglas». Jano rechazó la frase «vestir como el hombre que quieres ser» por sonar sexista: evitar mensajes de ese tipo.
 - **Primera consulta gratis** (20 min). Es el CTA principal.
 - Modalidades: **online** (videollamada + WhatsApp) y **en persona solo en Cádiz** (ir de compras juntos, revisar armario).
