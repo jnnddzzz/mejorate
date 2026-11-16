@@ -1,6 +1,6 @@
 // ==== CONFIGURACIÓN: cambia estos valores ====
 const CONFIG = {
-  telefono: "34659506979",   // Número con prefijo de país, sin + ni espacios (para llamar y WhatsApp)
+  telefono: "34659506979",   // Número con prefijo de país, sin + ni espacios (WhatsApp de confirmación)
   whatsappMsg: "Hola Jano, quiero información sobre la asesoría de imagen.",
 
   // Dónde se guardan las reservas. Pega aquí la URL de tu formulario de Formspree
@@ -54,8 +54,6 @@ $$("[data-wa]").forEach(el => {
   el.target = "_blank";
   el.rel = "noopener";
 });
-$$("[data-call]").forEach(el => { el.href = `tel:+${CONFIG.telefono}`; });
-$("#phone-text").textContent = CONFIG.telefono.replace(/^34/, "").replace(/(\d{3})(\d{2})(\d{2})(\d{2})/, "$1 $2 $3 $4");
 $("#year").textContent = new Date().getFullYear();
 
 // ---------- Split headings into words that rise into place ----------
@@ -462,7 +460,7 @@ form.addEventListener("submit", async e => {
   e.preventDefault();
   errorBox.hidden = true;
   const missing = [];
-  ["f-nombre", "f-edad", "f-sexo", "f-telefono", "f-estilo"].forEach(id => {
+  ["f-nombre", "f-edad", "f-sexo", "f-telefono", "f-estilo", "f-presupuesto"].forEach(id => {
     const el = $(`#${id}`);
     let ok = el.value.trim() !== "";
     if (id === "f-telefono") ok = el.value.replace(/\D/g, "").length >= 9;
@@ -493,6 +491,7 @@ form.addEventListener("submit", async e => {
     "Teléfono": data.telefono,
     "Le ayudo con": data.tema,
     "Estilo que quiere transmitir": data.estilo,
+    "Presupuesto": data.presupuesto,
     "Asesoría después": data.modalidad,
     "Primera cita": "Videollamada 20 min"
   };
@@ -518,6 +517,7 @@ form.addEventListener("submit", async e => {
     `👤 ${data.nombre}, ${data.edad} años (${data.sexo})`,
     `📞 ${data.telefono}`,
     `💬 ${data.tema} · Estilo: ${data.estilo}`,
+    `💶 Presupuesto: ${data.presupuesto}`,
     `📍 Después: ${data.modalidad}`
   ].join("\n");
 

@@ -307,7 +307,7 @@ h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(56px, 7.4vw, 
 @media (max-width: 860px) { .about { grid-template-columns: 1fr; } }
 
 /* ---------- Booking: large calendar ---------- */
-.booking-head { display: grid; grid-template-columns: 1.3fr .7fr; gap: clamp(24px, 5vw, 72px); align-items: end; margin-bottom: clamp(28px, 4vw, 44px); }
+.booking-head { display: grid; grid-template-columns: 1fr; gap: clamp(24px, 5vw, 72px); align-items: end; margin-bottom: clamp(28px, 4vw, 44px); }
 .booking-head .title + .muted { margin-top: 18px; font-size: 17px; max-width: 520px; }
 .contact-card { border-radius: 22px; padding: 22px 24px; }
 .phone { display: block; font-family: var(--serif); font-size: clamp(34px, 3.4vw, 44px); line-height: 1.1; margin: 4px 0 16px; font-variant-numeric: tabular-nums; }
@@ -433,7 +433,7 @@ h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(56px, 7.4vw, 
 .quick-wa svg { fill: #fff; }
 @media (max-width: 760px) {
   .quick { left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); bottom: max(12px, env(safe-area-inset-bottom, 0px)); }
-  .quick-book { flex: 1; }
+  .quick-book { flex: 1; padding: 15px 22px; font-size: 16px; }
   .footer { padding-bottom: 110px; }
 }
 

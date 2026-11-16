@@ -24,8 +24,8 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 ## Reservas
 - Calendario propio en la web (sección `#reservar`): día → hora → datos → confirmación por WhatsApp.
 - La primera cita es una **videollamada** de 20 min (gratis).
-- Datos que se piden (formulario corto, a petición de Jano): nombre, edad, sexo, teléfono, con qué te ayudo, **qué estilo quiere transmitir** y cómo prefiere la asesoría después (online o en persona en Cádiz). **No** se pide el problema (lo cuentan en la cita).
-- Botones de llamar (`tel:`) y WhatsApp siempre visibles (barra flotante `.quick`).
+- Datos que se piden (formulario corto, a petición de Jano): nombre, edad, sexo, teléfono, con qué te ayudo, **qué estilo quiere transmitir**, **presupuesto** y cómo prefiere la asesoría después (online o en persona en Cádiz). **No** se pide el problema (lo cuentan en la cita).
+- **Solo se puede contactar reservando** (a petición de Jano): no hay botones de llamar ni de WhatsApp directo; la barra flotante `.quick` solo tiene «Reservar cita». El único WhatsApp es el de confirmación al terminar la reserva.
 - Horario real: **lunes a viernes de 16:30 a 21:30, citas de 20 min** (`CONFIG.horario` en `js/main.js`). Calendario de mes completo, grande, con las horas al lado.
 - Los datos se guardan en **Formspree** (`CONFIG.formEndpoint` = `https://formspree.io/f/mjyyzqkr`): cada reserva llega por email y queda en el panel. Plan gratis: 50 envíos/mes. Ver `RESERVAS.md`.
 - Botones de WhatsApp con `wa.me` y mensaje prellenado.
@@ -38,7 +38,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Portada **sin fotos** (decisión final de Jano tras probar varias versiones): titular, frase de dolor rotatoria («¿Te suena?» + `DOLORES`), gancho y botones. En ordenador, a la derecha, tarjeta «Tu consulta gratis» (`#consult`) con las 3 próximas horas libres. Los looks arreglados (`FORMALES`) abren la rotación de «Sobre mí».
 - Estilos: 4 tarjetas (una por estilo, 2×2 en móvil) con fotos que rotan; al tocar se abre ese estilo a pantalla completa (deslizar con el dedo) con botón «Quiero un look así · Reservar». Jano rechazó la galería horizontal que solo mostraba un estilo.
 - Frases de dolor: muy grandes, encajadas en zigzag sin huecos, con el final en cursiva cromada; cada una entra desde un lado (alternando) con un ligero zoom al hacer scroll, estilo Apple.
-- CTA de portada muy visible: botón grande «Reserva tu cita gratis» con brillo y pulso, botones Llámame y WhatsApp, y atajo «Próximo hueco libre: hoy a las 16:30» que abre el formulario con esa hora. Gancho: «¿Sabes que puedes verte mejor pero no sabes por dónde empezar? Te regalo 20 minutos: me cuentas tu problema y te propongo cómo solucionarlo.» La consulta gratis es para escuchar el problema y proponer solución, **no** para dar la asesoría entera (que no se aprovechen solo de esa cita).
+- CTA de portada muy visible: botón grande «Reserva tu cita gratis» con brillo y pulso, y atajo «Próximo hueco libre: hoy a las 16:30» que abre el formulario con esa hora. Gancho: «¿Sabes que puedes verte mejor pero no sabes por dónde empezar? Te regalo 20 minutos: me cuentas tu problema y te propongo cómo solucionarlo.» La consulta gratis es para escuchar el problema y proponer solución, **no** para dar la asesoría entera (que no se aprovechen solo de esa cita).
 - Retrato: recortes propios en `img/fotos/retrato/` (proporción 0,55, Jano centrado y grande, pies siempre dentro), generados desde la caja YOLO.
 - Frases de puntos de dolor **nunca sexistas**: «la moda no tiene reglas», cualquier altura, cuerpo, piel o estilo.
 - **Ninguna foto parada ni repetida** en la página: cada foto aparece una vez (portada, tarjetas de estilo, «Sobre mí»); el visor a pantalla completa de cada estilo muestra todas las de ese estilo.
@@ -51,7 +51,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 ## Técnica
 - HTML/CSS/JS estático sin dependencias: `index.html`, `css/styles.css`, `js/main.js`. Apto para GitHub Pages.
 - Repositorio: `jnnddzzz/mejorate` (antes se planeó como «estetica»).
-- Configuración editable al principio de `js/main.js` (`CONFIG`): teléfono (llamadas y WhatsApp), `formEndpoint`, horario y días de antelación.
+- Configuración editable al principio de `js/main.js` (`CONFIG`): teléfono (WhatsApp de confirmación), `formEndpoint`, horario y días de antelación.
 - Fotos en `img/fotos/jano-XXXX.jpg` (1400 px) y `img/fotos/thumb/` (420 px). Salen de Google Drive, carpeta «mis fotos» y su subcarpeta «chandalesç».
 - Reglas de fotos (pedidas por Jano): Jano centrado, **nunca cortar cabeza ni zapatos**, y **solo una foto por outfit**. El centrado se hace con detección de persona (YOLO): los recortes solo quitan laterales, centrados en la caja de la persona (máx. 3:5). Nunca usar `object-fit: cover` con fotos de Jano en marcos de otra proporción.
 - Fotos repartidas sin repetir en `js/main.js`: `FORMALES` (abren «Sobre mí»), `PORTADA` (fotos de cada tarjeta, todas de 840 px de ancho para que encajen en 3:5 sin recorte), `GALERIA` y `SOBRE_MI` (rotan en «Sobre mí»). Categorías: streetwear, verano, chandal, arreglado. Al añadir fotos clásicas, crear «clásico» en `CATS` y `PORTADA`.
