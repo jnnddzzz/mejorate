@@ -6,6 +6,8 @@ const CONFIG = {
   // Dónde se guardan las reservas. Pega aquí la URL de tu formulario de Formspree
   // (https://formspree.io/f/xxxxxxx) o de tu Google Apps Script. Vacío = solo WhatsApp.
   formEndpoint: "https://formspree.io/f/mjyyzqkr",
+  // Hoja de cálculo «Mejórate · Reservas» en Google Drive: pega aquí la URL /exec de Apps Script.
+  sheetsEndpoint: "",
 
   // Horario de citas: días (1 = lunes … 5 = viernes, 6 = sábado, 0 = domingo), franja y duración.
   horario: { dias: [1, 2, 3, 4, 5], inicio: "16:30", fin: "21:30", minutos: 20 },
@@ -496,20 +498,23 @@ form.addEventListener("submit", async e => {
     "Primera cita": "Videollamada 20 min"
   };
 
-  if (CONFIG.formEndpoint) {
-    submitBtn.disabled = true;
-    submitBtn.textContent = "Enviando…";
-    try {
-      const body = new FormData();
-      Object.entries(payload).forEach(([k, v]) => body.append(k, v));
-      body.append("_subject", `Nueva videollamada: ${data.nombre}, ${cap(cuando)}`);
-      await fetch(CONFIG.formEndpoint, { method: "POST", body, headers: { Accept: "application/json" } });
-    } catch (err) {
-      // Si falla el guardado, la reserva sigue llegando por WhatsApp.
-    }
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Reservar cita gratis";
-  }
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Enviando…";
+  const toForm = extra => {
+    const body = new FormData();
+    Object.entries({ ...payload, ...extra }).forEach(([k, v]) => body.append(k, v));
+    return body;
+  };
+  // Cada destino es independiente: si uno falla, el otro guarda la reserva igualmente.
+  await Promise.allSettled([
+    // Google Sheets: una fila nueva por reserva (no-cors: Apps Script no devuelve cabeceras CORS)
+    CONFIG.sheetsEndpoint && fetch(CONFIG.sheetsEndpoint, { method: "POST", mode: "no-cors", body: toForm({ "Estado": "Pendiente" }) }),
+    // Formspree: aviso por email
+    CONFIG.formEndpoint && fetch(CONFIG.formEndpoint, { method: "POST", headers: { Accept: "application/json" },
+      body: toForm({ _subject: `Nueva videollamada: ${data.nombre}, ${cap(cuando)}` }) })
+  ]);
+  submitBtn.disabled = false;
+  submitBtn.textContent = "Reservar cita gratis";
 
   const msg = [
     "Hola Jano, acabo de reservar mi videollamada gratis en tu web:",

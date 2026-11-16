@@ -5,7 +5,7 @@ La web tiene su propio calendario. Cuando alguien reserva la consulta gratis:
 1. **Siempre:** se le abre un botón para mandarte la reserva por WhatsApp con todos sus datos.
 2. **Si configuras un destino** (`formEndpoint` en `js/main.js`), los datos además se guardan solos, aunque la persona no pulse el botón de WhatsApp.
 
-Datos que se guardan: fecha de la reserva, día, hora, nombre, edad, sexo, teléfono, con qué quiere ayuda y modalidad (online o en persona en Cádiz).
+Datos que se guardan: fecha de la reserva, día, hora, nombre, edad, sexo, teléfono, con qué quiere ayuda, estilo que quiere transmitir, presupuesto, asesoría después (online o en persona en Cádiz) y primera cita.
 
 ## Opción A: Formspree (la más fácil, 5 minutos)
 
@@ -22,26 +22,28 @@ Guarda cada reserva en un panel online y te manda un email con cada una. Gratis 
 
 Puedes ver todas las reservas en tu panel de Formspree y exportarlas a Excel (CSV).
 
-## Opción B: Google Sheets (gratis e ilimitado)
+## Google Sheets (hoja «Mejórate · Reservas» en tu Drive)
 
-Requiere tener espacio libre en Google Drive.
+La hoja ya existe en tu Drive con las columnas puestas. Para conectarla:
 
-1. Crea una hoja de cálculo nueva en Google Sheets llamada «Mejórate · Reservas».
-2. Menú **Extensiones → Apps Script**, borra lo que haya y pega esto:
+1. Abre la hoja **Mejórate · Reservas** en Google Drive (desde el ordenador es más fácil).
+2. Menú **Extensiones → Apps Script**. Borra lo que haya y pega esto:
    ```js
    function doPost(e) {
      const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
-     const p = e.parameter;
-     const cols = ["Fecha de reserva", "Día", "Hora", "Nombre", "Edad", "Sexo", "Teléfono",
-                   "Le ayudo con", "Modalidad"];
-     if (sheet.getLastRow() === 0) sheet.appendRow(cols);
-     sheet.appendRow(cols.map(c => p[c] || ""));
-     return ContentService.createTextOutput(JSON.stringify({ ok: true }))
-       .setMimeType(ContentService.MimeType.JSON);
+     const cols = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+     sheet.appendRow(cols.map(c => e.parameter[c] || ""));
+     return ContentService.createTextOutput("ok");
    }
    ```
-3. Pulsa **Implementar → Nueva implementación → Aplicación web**. En «Quién tiene acceso» elige **Cualquier usuario** e implementa.
-4. Copia la URL que termina en `/exec` y ponla en `formEndpoint`.
+3. Pulsa el icono de guardar (💾).
+4. Arriba a la derecha: **Implementar → Nueva implementación**. En el engranaje elige **Aplicación web**.
+   - Ejecutar como: **Yo**
+   - Quién tiene acceso: **Cualquier usuario**
+5. Pulsa **Implementar**, acepta los permisos (Google avisará de que la app no está verificada: «Configuración avanzada» → «Ir a … (no seguro)», es tu propio script).
+6. Copia la **URL de la aplicación web** (termina en `/exec`) y ponla en `sheetsEndpoint` de `js/main.js`.
+
+Cada reserva añade una fila con Estado «Pendiente». Cuando confirmes la cita, cámbialo a «Confirmada».
 
 ## Cambiar el horario
 

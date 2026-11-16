@@ -27,7 +27,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Datos que se piden (formulario corto, a petición de Jano): nombre, edad, sexo, teléfono, con qué te ayudo, **qué estilo quiere transmitir**, **presupuesto** y cómo prefiere la asesoría después (online o en persona en Cádiz). **No** se pide el problema (lo cuentan en la cita).
 - **Solo se puede contactar reservando** (a petición de Jano): no hay botones de llamar ni de WhatsApp directo; la barra flotante `.quick` solo tiene «Reservar cita». El único WhatsApp es el de confirmación al terminar la reserva.
 - Horario real: **lunes a viernes de 16:30 a 21:30, citas de 20 min** (`CONFIG.horario` en `js/main.js`). Calendario de mes completo, grande, con las horas al lado.
-- Los datos se guardan en **Formspree** (`CONFIG.formEndpoint` = `https://formspree.io/f/mjyyzqkr`): cada reserva llega por email y queda en el panel. Plan gratis: 50 envíos/mes. Ver `RESERVAS.md`.
+- Los datos van a la hoja de Google Sheets **«Mejórate · Reservas»** en el Drive de Jano (id `1kKABuW8hjRFgCoUOWmjXPUu_2R7xNDAmTNMcLpCB0Oc`) vía Apps Script (`CONFIG.sheetsEndpoint`, pasos en `RESERVAS.md`), con columna Estado. Además van a **Formspree** (`CONFIG.formEndpoint` = `https://formspree.io/f/mjyyzqkr`): cada reserva llega por email y queda en el panel. Plan gratis: 50 envíos/mes. Ver `RESERVAS.md`.
 - Botones de WhatsApp con `wa.me` y mensaje prellenado.
 
 ## Diseño
@@ -63,6 +63,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - [x] Fotos de Jano de Drive (34 looks).
 - [ ] Fotos de estilo clásico (Jano las subirá).
 - [x] Número de WhatsApp real (+34 659 50 69 79).
+- [ ] Conectar la hoja de Google Sheets: Jano debe publicar el Apps Script y pasar la URL `/exec` para `sheetsEndpoint`.
 - [x] Guardado de reservas activo con Formspree (`https://formspree.io/f/mjyyzqkr`). Llega al email de Jano y queda en su panel de Formspree.
 - [x] Horario real: L–V 16:30–21:30, citas de 20 min.
 - [x] Zona para el servicio en persona: Cádiz.
