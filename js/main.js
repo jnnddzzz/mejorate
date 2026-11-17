@@ -508,7 +508,9 @@ form.addEventListener("submit", async e => {
   // Cada destino es independiente: si uno falla, el otro guarda la reserva igualmente.
   await Promise.allSettled([
     // Google Sheets: una fila nueva por reserva (no-cors: Apps Script no devuelve cabeceras CORS)
-    CONFIG.sheetsEndpoint && fetch(CONFIG.sheetsEndpoint, { method: "POST", mode: "no-cors", body: toForm({ "Estado": "Pendiente" }) }),
+    // URL-encoded (Apps Script always parses it into e.parameter) and keepalive so it finishes even if the page changes
+    CONFIG.sheetsEndpoint && fetch(CONFIG.sheetsEndpoint, { method: "POST", mode: "no-cors", keepalive: true,
+      body: new URLSearchParams({ ...payload, "Estado": "Pendiente" }) }),
     // Formspree: aviso por email
     CONFIG.formEndpoint && fetch(CONFIG.formEndpoint, { method: "POST", headers: { Accept: "application/json" },
       body: toForm({ _subject: `Nueva videollamada: ${data.nombre}, ${cap(cuando)}` }) })
