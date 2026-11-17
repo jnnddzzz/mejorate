@@ -44,7 +44,8 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - **Ninguna foto parada ni repetida** en la página: cada foto aparece una vez (portada, tarjetas de estilo, «Sobre mí»); el visor a pantalla completa de cada estilo muestra todas las de ese estilo.
 - Cursor propio con etiqueta («Ver looks», «Ampliar») y botones magnéticos en ordenador.
 - Oscuro, paneles de cristal ahumado, acento degradado cromado en los titulares en cursiva.
-- Tipografías: Instrument Serif (titulares) + Inter (texto) + JetBrains Mono (etiquetas).
+- Tipografías: **Bodoni Moda** (titulares, aire de revista de moda) + **Geist** (texto) + **Geist Mono** (etiquetas). Secciones numeradas «(01) ¿TE SUENA?». Jano pidió que no pareciera hecha con una plantilla básica.
+- Formulario conversacional: una pregunta cada vez, con barra de progreso, saludo con el nombre («Encantado, Carlos»), opciones como botones que avanzan solos y resumen final antes de enviar.
 - Tono cercano (tuteo, «Hola, soy Jano»). Textos claros sobre qué hace, sin información que despiste.
 - Marca: se reconoce por **jjn.dzz** y aparece el nombre **Jano Arribas Díaz**.
 
