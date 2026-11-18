@@ -82,6 +82,11 @@
                 <span>Próximo hueco libre: <strong id="next-slot-text"></strong></span>
               </button>
             </div>
+            <ol class="how-mini" aria-label="Cómo reservar">
+              <li><b>1</b>Elige día y hora</li>
+              <li><b>2</b>Tus datos <small>(1 min)</small></li>
+              <li><b>3</b>Confirma por WhatsApp</li>
+            </ol>
         </div>
       </div>
     </section>
@@ -135,7 +140,7 @@
           <h2 class="title split">Tres pasos. <em>Sin complicaciones.</em></h2>
         </div>
         <ol class="steps">
-          <li class="reveal"><span>01</span><h3>Reservas tu cita gratis</h3><p>Eliges día y hora en el calendario, o me llamas.</p></li>
+          <li class="reveal"><span>01</span><h3>Reservas tu cita gratis</h3><p>Eliges día y hora en el calendario de aquí abajo y rellenas tus datos en un minuto.</p></li>
           <li class="reveal"><span>02</span><h3>Videollamada de 20 minutos</h3><p>Me cuentas qué quieres mejorar y vemos cómo te puedo ayudar.</p></li>
           <li class="reveal"><span>03</span><h3>Te asesoro</h3><p>Online o en persona, me encargo de que saques tu mejor versión.</p></li>
         </ol>
@@ -154,58 +159,27 @@
       </div>
     </section>
 
-    <!-- STYLES: one card per style; tap to see every look of that style -->
-    <section class="section" id="estilos">
-      <div class="wrap">
-        <div class="head">
-          <p class="eyebrow reveal">Estilos</p>
-          <h2 class="title split">Cada cuerpo, <em>su estilo.</em></h2>
-          <p class="head-sub muted reveal">Toca un estilo para ver todos mis looks.</p>
-        </div>
-        <div class="style-grid" id="style-grid"></div>
-      </div>
-    </section>
-
-    <!-- ABOUT: photos rotate on their own -->
-    <section class="section" id="sobre-mi">
-      <div class="wrap about">
-        <div class="about-media reveal">
-          <div class="about-frame" id="about-frame"></div>
-          <div class="about-dots" id="about-dots"></div>
-        </div>
-        <div>
-          <p class="eyebrow reveal">Sobre mí</p>
-          <h2 class="title split">Hola, soy <em>Jano.</em></h2>
-          <p class="muted reveal">En redes me conocéis como <strong>@jjn.dzz</strong>. Llevo años estudiando la imagen: cómo sienta cada corte de ropa, qué colores favorecen a cada piel y qué corte de pelo va con cada cara.</p>
-          <p class="muted reveal">Me adapto a cualquier altura, cuerpo, piel y estilo. Mi trabajo es que salgas sabiendo qué te queda bien y por qué.</p>
-          <div class="social reveal">
-            <a href="https://www.tiktok.com/@jjn.dzz" target="_blank" rel="noopener">TikTok ↗</a>
-            <a href="https://www.instagram.com/jjn.dzz" target="_blank" rel="noopener">Instagram ↗</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- BOOKING -->
+    <!-- BOOKING: right after "how it works", so booking comes early -->
     <section class="section booking-section" id="reservar">
       <div class="wrap">
         <div class="booking-head">
           <div>
-            <p class="eyebrow reveal">Reservar</p>
-            <h2 class="title split">Tu primera consulta es <em>gratis.</em></h2>
-            <p class="muted reveal">Videollamada de 20 minutos, de lunes a jueves de 15:30 a 20:30. Elige día y hora y te mando el enlace por WhatsApp.</p>
+            <p class="eyebrow reveal">Reservar · 3 pasos</p>
+            <h2 class="title split">Reserva tu videollamada <em>gratis.</em></h2>
+            <p class="muted reveal">20 minutos, de lunes a jueves de 15:30 a 20:30. Solo tardas un minuto.</p>
           </div>
         </div>
 
         <div class="booker reveal" id="booker">
           <ol class="booker-steps" aria-hidden="true">
-            <li class="on"><span>01</span>Día y hora</li><li><span>02</span>Tus datos</li><li><span>03</span>Listo</li>
+            <li class="on"><span>1</span>Día y hora</li><li><span>2</span>Tus datos</li><li><span>3</span>Confirmar</li>
           </ol>
 
           <!-- Step 1: month + times -->
           <div class="bstep active" data-bstep="0">
             <div class="planner">
               <div class="month">
+                <p class="step-hint"><b>↓</b> Toca un día con punto</p>
                 <div class="cal-head">
                   <p class="cal-title" id="cal-month"></p>
                   <div class="cal-nav">
@@ -223,6 +197,7 @@
                   <p class="muted small">y aquí verás las horas libres.</p>
                 </div>
                 <div class="times-list" id="times-list" hidden>
+                  <p class="step-hint"><b>↓</b> Toca una hora y sigues</p>
                   <p class="times-day" id="chosen-day"></p>
                   <p class="muted small" id="times-count"></p>
                   <div class="slots" id="slots" role="listbox" aria-label="Elige una hora"></div>
@@ -237,8 +212,9 @@
               <button type="button" class="back" data-back>← Cambiar</button>
               <p class="chosen-slot" id="chosen-slot"></p>
             </div>
+            <p class="form-intro">Ya casi está. <strong>Rellena estos datos y pulsa el botón de abajo.</strong> Así llego a la videollamada sabiendo cómo ayudarte.</p>
             <div class="fields">
-              <p class="fields-group field-full"><span>1</span> Sobre ti</p>
+              <p class="fields-group field-full">Sobre ti</p>
               <label class="field field-full q-field" data-q="nombre"><span class="q-label"><i class="q-ok" aria-hidden="true"></i>¿Cómo te llamas?</span><input id="f-nombre" name="nombre" autocomplete="given-name" placeholder="Tu nombre" enterkeyhint="next" required></label>
               <label class="field q-field" data-q="telefono"><span class="q-label"><i class="q-ok" aria-hidden="true"></i>Tu WhatsApp</span><input id="f-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" placeholder="600 000 000" enterkeyhint="next" required></label>
               <label class="field q-field" data-q="edad"><span class="q-label"><i class="q-ok" aria-hidden="true"></i>Edad</span><input id="f-edad" name="edad" type="number" inputmode="numeric" min="14" max="99" placeholder="Ej. 24" enterkeyhint="done" required></label>
@@ -250,7 +226,7 @@
                   <label><input type="radio" name="sexo" value="Prefiero no decirlo"><span>Prefiero no decirlo</span></label>
                 </div>
               </div>
-              <p class="fields-group field-full"><span>2</span> Tu imagen <small>· toca una opción</small></p>
+              <p class="fields-group field-full">Tu imagen <small>· toca una opción</small></p>
               <div class="field q-field field-full" data-q="tema">
                 <p class="q-label"><i class="q-ok" aria-hidden="true"></i>¿Con qué te ayudo?</p>
                 <div class="chips chips-2" role="radiogroup">
@@ -311,6 +287,39 @@
       </div>
     </section>
 
+    <!-- STYLES: one card per style; tap to see every look of that style -->
+    <section class="section" id="estilos">
+      <div class="wrap">
+        <div class="head">
+          <p class="eyebrow reveal">Estilos</p>
+          <h2 class="title split">Cada cuerpo, <em>su estilo.</em></h2>
+          <p class="head-sub muted reveal">Toca un estilo para ver todos mis looks.</p>
+        </div>
+        <div class="style-grid" id="style-grid"></div>
+      </div>
+    </section>
+
+    <!-- ABOUT: photos rotate on their own -->
+    <section class="section" id="sobre-mi">
+      <div class="wrap about">
+        <div class="about-media reveal">
+          <div class="about-frame" id="about-frame"></div>
+          <div class="about-dots" id="about-dots"></div>
+        </div>
+        <div>
+          <p class="eyebrow reveal">Sobre mí</p>
+          <h2 class="title split">Hola, soy <em>Jano.</em></h2>
+          <p class="muted reveal">En redes me conocéis como <strong>@jjn.dzz</strong>. Llevo años estudiando la imagen: cómo sienta cada corte de ropa, qué colores favorecen a cada piel y qué corte de pelo va con cada cara.</p>
+          <p class="muted reveal">Me adapto a cualquier altura, cuerpo, piel y estilo. Mi trabajo es que salgas sabiendo qué te queda bien y por qué.</p>
+          <div class="social reveal">
+            <a href="https://www.tiktok.com/@jjn.dzz" target="_blank" rel="noopener">TikTok ↗</a>
+            <a href="https://www.instagram.com/jjn.dzz" target="_blank" rel="noopener">Instagram ↗</a>
+          </div>
+          <a href="#reservar" class="btn btn-light about-cta reveal magnetic">Reserva tu videollamada gratis <span class="arrow">→</span></a>
+        </div>
+      </div>
+    </section>
+
     <!-- FAQ -->
     <section class="section section-tight" id="dudas">
       <div class="wrap split-cols">
@@ -349,7 +358,7 @@
 
   <!-- Quick action: booking, always at hand -->
   <div class="quick" id="quick">
-    <a href="#reservar" class="btn btn-light quick-book">Reservar cita</a>
+    <a href="#reservar" class="btn btn-light quick-book">Reservar cita gratis</a>
   </div>
 
   <script src="js/main.js"></script>

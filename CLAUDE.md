@@ -22,7 +22,7 @@ Hombres de **16 a 40 años**, usuarios de redes sociales, que no saben vestirse 
 - Sin precios públicos por ahora.
 
 ## Reservas
-- Calendario propio en la web (sección `#reservar`): día → hora → datos → confirmación por WhatsApp.
+- Calendario propio en la web (sección `#reservar`): día → hora → datos → confirmación por WhatsApp. La sección de reservar va justo después de «Cómo funciona» (alta jerarquía, a petición de Jano). Guía de 3 pasos bajo el botón de portada (`.how-mini`), pestañas numeradas 1-2-3 en el reservador, pistas «Toca un día con punto» / «Toca una hora y sigues» (`.step-hint`) y botón de reservar al final de «Sobre mí».
 - La primera cita es una **videollamada** de 20 min (gratis).
 - Datos que se piden (formulario corto, a petición de Jano): nombre, edad, sexo, teléfono, con qué te ayudo, **qué estilo quiere transmitir**, **presupuesto** y cómo prefiere la asesoría después (online o en persona en Cádiz). **No** se pide el problema (lo cuentan en la cita). Formulario sin desplegables: todo se elige tocando botones (`.chips`), cada dato marca un ✓ al completarse y el botón fijo abajo dice «Te faltan N datos» hasta que está todo. Sin casilla de consentimiento: nota «Al reservar aceptas…». Jano rechazó el formulario de una pregunta por pantalla.
 - **Solo se puede contactar reservando** (a petición de Jano): no hay botones de llamar ni de WhatsApp directo; la barra flotante `.quick` solo tiene «Reservar cita». El único WhatsApp es el de confirmación al terminar la reserva.
