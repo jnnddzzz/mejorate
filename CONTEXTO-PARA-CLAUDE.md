@@ -6,6 +6,7 @@ Usa este documento como contexto para ayudarme con contenido, vídeos, ideas, te
 - **Jano Arribas Díaz**, en redes **@jjn.dzz** (TikTok e Instagram), con algo de comunidad ya creada.
 - Soy **asesor de imagen**. Mi fuerte es la **vestimenta**: sé qué prendas, cortes, tallas y combinaciones favorecen a cada tipo de cuerpo.
 - También asesoro en **colorimetría** (qué colores favorecen según piel, pelo y ojos) y **barbería**: corte de pelo, barba y cejas según la forma de la cara.
+- Enseño **dónde comprar la ropa** y **trucos para que todo te quede bien al pedir online** (tallas, medidas, devoluciones).
 - Me adapto a cualquier altura, peso, cuerpo, tono de piel y estilo.
 
 ## Mi filosofía (importante para cualquier texto o vídeo)
@@ -30,7 +31,7 @@ Usa este documento como contexto para ayudarme con contenido, vídeos, ideas, te
    - **Online:** videollamada y seguimiento por WhatsApp.
    - **En persona, solo en Cádiz:** vamos de compras juntos y revisamos su armario.
 - Aún **no tengo precios públicos**. En el formulario pregunto el presupuesto: menos de 50 €, 50–100 €, 100–200 €, 200–500 €, 500–1000 €, 1000–3000 € y más de 3000 €.
-- Horario de citas: **lunes a jueves, de 15:30 a 20:30**, en citas de 20 minutos.
+- Horario de citas: **lunes a jueves, de 15:30 a 20:30**, con huecos cada media hora (la videollamada dura 20 minutos).
 
 ## Mi web
 - **https://jnnddzzz.github.io/mejorate/**

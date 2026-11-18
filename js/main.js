@@ -10,7 +10,7 @@ const CONFIG = {
   sheetsEndpoint: "https://script.google.com/macros/s/AKfycbyNL9RGIpkgyhDXN_kRg15kZW_2MD-Nvm4A35qZY-TbPtWiKNiwct0z2icQWJumkak0ow/exec",
 
   // Horario de citas: días (1 = lunes … 5 = viernes, 6 = sábado, 0 = domingo), franja y duración.
-  horario: { dias: [1, 2, 3, 4], inicio: "15:30", fin: "20:30", minutos: 20 },
+  horario: { dias: [1, 2, 3, 4], inicio: "15:30", fin: "20:30", minutos: 30 },
   diasVista: 45,             // Cuántos días hacia delante se puede reservar
   avisoMinimoHoras: 3        // Antelación mínima para reservar
 };
@@ -380,7 +380,7 @@ const renderTimes = () => {
   $("#times-empty").hidden = true;
   $("#times-list").hidden = false;
   $("#chosen-day").textContent = cap(fmtLong.format(pick.date));
-  $("#times-count").textContent = `${list.length} ${list.length === 1 ? "hora libre" : "horas libres"} · citas de ${CONFIG.horario.minutos} min`;
+  $("#times-count").textContent = `${list.length} ${list.length === 1 ? "hora libre" : "horas libres"} · una cada ${CONFIG.horario.minutos} min`;
   $("#slots").innerHTML = list.map((t, i) => `<button type="button" class="slot" data-t="${t}" role="option" style="--d:${(i * .025).toFixed(3)}s">${t}</button>`).join("");
 };
 const chooseDay = date => { pick.date = date; pick.time = null; renderMonth(); renderTimes(); };
