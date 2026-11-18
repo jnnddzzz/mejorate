@@ -126,7 +126,7 @@ const onScrollUI = () => {
   progress.style.transform = `scaleX(${max > 0 ? scrollY / max : 0})`;
   nav.classList.toggle("scrolled", scrollY > 10);
   const r = booking.getBoundingClientRect();
-  const atBooking = r.top < innerHeight * .85 && r.bottom > innerHeight * .15;
+  const atBooking = r.top < innerHeight * .6 && r.bottom > innerHeight * .4;
   quick.classList.toggle("show", scrollY > innerHeight * .4 && !atBooking);
 };
 
@@ -454,87 +454,30 @@ if (nextSlots.length) {
 const form = $("#booking-form");
 const errorBox = $("#form-error");
 const submitBtn = $("#submit");
-
-// ---------- Conversational form: one question at a time ----------
-const qs = $$(".q", form);
-const qErr = $("#q-err");
-const qPrev = $("#q-prev"), qNext = $("#q-next");
-const val = name => (new FormData(form).get(name) || "").toString().trim();
-const firstName = () => val("nombre").split(/\s+/)[0];
-const CHECKS = {
-  nombre: () => val("nombre").length >= 2 || "Escribe tu nombre.",
-  edad: () => (+val("edad") >= 14 && +val("edad") <= 99) || "Pon una edad entre 14 y 99.",
-  sexo: () => !!val("sexo") || "Elige una opción.",
-  telefono: () => val("telefono").replace(/\D/g, "").length >= 9 || "El teléfono necesita al menos 9 cifras.",
-  tema: () => !!val("tema") || "Elige con qué te ayudo.",
-  estilo: () => !!val("estilo") || "Elige un estilo.",
-  presupuesto: () => !!val("presupuesto") || "Elige una opción.",
-  modalidad: () => !!val("modalidad") || "Elige una opción.",
-  final: () => true
-};
-const LABELS = { tema: "Te ayudo con", estilo: "Estilo", presupuesto: "Presupuesto", modalidad: "Después", telefono: "Teléfono", edad: "Edad" };
-let qi = 0;
-$("#q-total").textContent = String(qs.length).padStart(2, "0");
-
-const showQ = (i, dir = 1) => {
-  const prev = qs[qi];
-  qi = Math.max(0, Math.min(qs.length - 1, i));
-  const cur = qs[qi];
-  if (prev !== cur) {
-    prev.classList.remove("active");
-    prev.classList.add(dir > 0 ? "leave-left" : "leave-right");
-    setTimeout(() => prev.classList.remove("leave-left", "leave-right"), 500);
-    cur.style.setProperty("--from", dir > 0 ? "40px" : "-40px");
-  }
-  cur.classList.add("active");
-  qErr.hidden = true;
-  $("#q-num").textContent = String(qi + 1).padStart(2, "0");
-  $("#q-bar").style.width = `${((qi + 1) / qs.length) * 100}%`;
-  qPrev.style.visibility = qi === 0 ? "hidden" : "visible";
-  qNext.hidden = cur.dataset.q === "final";
-  const name = firstName();
-  $$("[data-hello]", form).forEach(el => { el.textContent = name ? `Encantado, ${name}. ` : ""; });
-  $$("[data-hello-end]", form).forEach(el => { el.textContent = name ? `, ${name}` : ""; });
-  if (cur.dataset.q === "final") {
-    $("#q-summary").innerHTML = Object.entries(LABELS).map(([k, l]) =>
-      `<div><dt>${l}</dt><dd>${val(k).replace(/[<>&]/g, "")}</dd></div>`).join("");
-  }
-  const input = $(".q-input", cur);
-  if (input && matchMedia("(hover: hover)").matches) setTimeout(() => input.focus({ preventScroll: true }), 350);
-};
-const tryNext = () => {
-  const ok = CHECKS[qs[qi].dataset.q]();
-  if (ok !== true) {
-    qErr.textContent = ok; qErr.hidden = false;
-    qs[qi].classList.remove("shake"); void qs[qi].offsetWidth; qs[qi].classList.add("shake");
-    return;
-  }
-  showQ(qi + 1, 1);
-};
-qNext.addEventListener("click", tryNext);
-qPrev.addEventListener("click", () => showQ(qi - 1, -1));
-form.addEventListener("keydown", e => {
-  if (e.key === "Enter" && e.target.classList.contains("q-input")) { e.preventDefault(); tryNext(); }
-});
-// choosing an option moves on by itself
-form.addEventListener("change", e => {
-  if (e.target.type === "radio") setTimeout(tryNext, 280);
-});
-form.addEventListener("input", () => { qErr.hidden = true; });
+form.addEventListener("input", e => e.target.classList.remove("invalid"));
+form.addEventListener("change", e => e.target.classList.remove("invalid"));
 $("#f-consent").addEventListener("change", e => e.target.closest(".consent").classList.remove("invalid"));
-showQ(0);
 
 form.addEventListener("submit", async e => {
   e.preventDefault();
   errorBox.hidden = true;
-  const bad = qs.findIndex(q => CHECKS[q.dataset.q]() !== true);
-  if (bad !== -1) { showQ(bad, -1); tryNext(); return; }
+  const missing = [];
+  ["f-nombre", "f-edad", "f-sexo", "f-telefono", "f-estilo", "f-presupuesto"].forEach(id => {
+    const el = $(`#${id}`);
+    let ok = el.value.trim() !== "";
+    if (id === "f-telefono") ok = el.value.replace(/\D/g, "").length >= 9;
+    if (id === "f-edad") ok = +el.value >= 14 && +el.value <= 99;
+    el.classList.toggle("invalid", !ok);
+    if (!ok) missing.push(el);
+  });
   const consent = $("#f-consent");
   consent.closest(".consent").classList.toggle("invalid", !consent.checked);
-  if (!consent.checked) {
-    errorBox.textContent = "Marca la casilla para que pueda contactarte.";
+  if (missing.length || !consent.checked) {
+    errorBox.textContent = missing.length
+      ? (missing.some(el => el.id === "f-telefono") ? "Revisa los campos marcados en rojo (el teléfono necesita al menos 9 cifras)." : "Revisa los campos marcados en rojo.")
+      : "Marca la casilla para que pueda contactarte.";
     errorBox.hidden = false;
-    consent.focus();
+    (missing[0] || consent).focus();
     return;
   }
 
