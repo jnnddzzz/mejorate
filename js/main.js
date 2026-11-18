@@ -454,30 +454,57 @@ if (nextSlots.length) {
 const form = $("#booking-form");
 const errorBox = $("#form-error");
 const submitBtn = $("#submit");
-form.addEventListener("input", e => e.target.classList.remove("invalid"));
-form.addEventListener("change", e => e.target.classList.remove("invalid"));
-$("#f-consent").addEventListener("change", e => e.target.closest(".consent").classList.remove("invalid"));
+// Every answer is checked live: the field gets a tick and the button says how many are left.
+const fval = name => (new FormData(form).get(name) || "").toString().trim();
+const CHECKS = {
+  nombre: () => fval("nombre").length >= 2,
+  telefono: () => fval("telefono").replace(/\D/g, "").length >= 9,
+  edad: () => +fval("edad") >= 14 && +fval("edad") <= 99,
+  sexo: () => !!fval("sexo"),
+  tema: () => !!fval("tema"),
+  estilo: () => !!fval("estilo"),
+  presupuesto: () => !!fval("presupuesto"),
+  modalidad: () => !!fval("modalidad")
+};
+const qFields = $$(".q-field", form);
+const missingFields = () => qFields.filter(f => !CHECKS[f.dataset.q]());
+const refreshForm = () => {
+  const left = missingFields();
+  qFields.forEach(f => {
+    const ok = CHECKS[f.dataset.q]();
+    f.classList.toggle("is-ok", ok);
+    if (ok) f.classList.remove("invalid");
+  });
+  submitBtn.classList.toggle("ready", !left.length);
+  submitBtn.textContent = left.length ? `Te ${left.length === 1 ? "falta 1 dato" : `faltan ${left.length} datos`}` : "Reservar cita gratis";
+  if (!left.length) errorBox.hidden = true;
+};
+form.addEventListener("input", refreshForm);
+form.addEventListener("change", refreshForm);
+// Enter in a text box jumps to the next empty one instead of submitting
+form.addEventListener("keydown", e => {
+  if (e.key !== "Enter" || e.target.tagName !== "INPUT" || e.target.type === "radio") return;
+  e.preventDefault();
+  const next = missingFields()[0];
+  const input = next && $("input:not([type=radio])", next);
+  if (input) input.focus();
+  else if (next) { e.target.blur(); next.scrollIntoView({ behavior: "smooth", block: "center" }); }
+  else form.requestSubmit();
+});
+refreshForm();
 
 form.addEventListener("submit", async e => {
   e.preventDefault();
   errorBox.hidden = true;
-  const missing = [];
-  ["f-nombre", "f-edad", "f-sexo", "f-telefono", "f-estilo", "f-presupuesto"].forEach(id => {
-    const el = $(`#${id}`);
-    let ok = el.value.trim() !== "";
-    if (id === "f-telefono") ok = el.value.replace(/\D/g, "").length >= 9;
-    if (id === "f-edad") ok = +el.value >= 14 && +el.value <= 99;
-    el.classList.toggle("invalid", !ok);
-    if (!ok) missing.push(el);
-  });
-  const consent = $("#f-consent");
-  consent.closest(".consent").classList.toggle("invalid", !consent.checked);
-  if (missing.length || !consent.checked) {
-    errorBox.textContent = missing.length
-      ? (missing.some(el => el.id === "f-telefono") ? "Revisa los campos marcados en rojo (el teléfono necesita al menos 9 cifras)." : "Revisa los campos marcados en rojo.")
-      : "Marca la casilla para que pueda contactarte.";
+  const missing = missingFields();
+  if (missing.length) {
+    missing.forEach(f => f.classList.add("invalid"));
+    const first = missing[0];
+    errorBox.textContent = first.dataset.q === "telefono" ? "El WhatsApp necesita al menos 9 cifras." : "Completa lo que está marcado en rojo.";
     errorBox.hidden = false;
-    (missing[0] || consent).focus();
+    first.scrollIntoView({ behavior: "smooth", block: "center" });
+    const input = $("input:not([type=radio])", first);
+    if (input) setTimeout(() => input.focus({ preventScroll: true }), 350);
     return;
   }
 
@@ -516,7 +543,7 @@ form.addEventListener("submit", async e => {
       body: toForm({ _subject: `Nueva videollamada: ${data.nombre}, ${cap(cuando)}` }) })
   ]);
   submitBtn.disabled = false;
-  submitBtn.textContent = "Reservar cita gratis";
+  refreshForm();
 
   const msg = [
     "Hola Jano, acabo de reservar mi videollamada gratis en tu web:",

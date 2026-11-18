@@ -238,60 +238,65 @@
               <p class="chosen-slot" id="chosen-slot"></p>
             </div>
             <div class="fields">
-              <label class="field field-full"><span>Nombre</span><input id="f-nombre" name="nombre" autocomplete="given-name" required></label>
-              <label class="field"><span>Edad</span><input id="f-edad" name="edad" type="number" inputmode="numeric" min="14" max="99" required></label>
-              <label class="field"><span>Sexo</span>
-                <select id="f-sexo" name="sexo" required>
-                  <option value="" selected disabled>Elige</option>
-                  <option>Hombre</option>
-                  <option>Mujer</option>
-                  <option>Prefiero no decirlo</option>
-                </select>
-              </label>
-              <label class="field"><span>Teléfono</span><input id="f-telefono" name="telefono" type="tel" autocomplete="tel" placeholder="600 000 000" required></label>
-              <label class="field"><span>¿Con qué te ayudo?</span>
-                <select id="f-tema" name="tema">
-                  <option>Vestimenta</option>
-                  <option>Colorimetría</option>
-                  <option>Barbería: corte, barba y cejas</option>
-                  <option>Cambio de imagen completo</option>
-                </select>
-              </label>
-              <label class="field field-full"><span>¿Qué estilo quieres transmitir?</span>
-                <select id="f-estilo" name="estilo" required>
-                  <option value="" selected disabled>Elige un estilo</option>
-                  <option>Clásico / elegante</option>
-                  <option>Arreglado pero informal</option>
-                  <option>Streetwear</option>
-                  <option>Deportivo / chándal</option>
-                  <option>Minimalista</option>
-                  <option>No lo sé, quiero que me aconsejes</option>
-                </select>
-              </label>
-              <label class="field field-full"><span>¿Qué presupuesto tienes o estás dispuesto a invertir en tu imagen?</span>
-                <select id="f-presupuesto" name="presupuesto" required>
-                  <option value="" selected disabled>Elige una opción</option>
-                  <option>Menos de 50 €</option>
-                  <option>50 – 100 €</option>
-                  <option>100 – 200 €</option>
-                  <option>200 – 500 €</option>
-                  <option>500 – 1000 €</option>
-                  <option>1000 – 3000 €</option>
-                  <option>Más de 3000 €</option>
-                  <option>Aún no lo sé</option>
-                </select>
-              </label>
-              <fieldset class="field field-full">
-                <legend>Después de la videollamada, ¿cómo prefieres la asesoría?</legend>
-                <div class="seg">
+              <p class="fields-group field-full"><span>1</span> Sobre ti</p>
+              <label class="field field-full q-field" data-q="nombre"><span class="q-label"><i class="q-ok" aria-hidden="true"></i>¿Cómo te llamas?</span><input id="f-nombre" name="nombre" autocomplete="given-name" placeholder="Tu nombre" enterkeyhint="next" required></label>
+              <label class="field q-field" data-q="telefono"><span class="q-label"><i class="q-ok" aria-hidden="true"></i>Tu WhatsApp</span><input id="f-telefono" name="telefono" type="tel" autocomplete="tel" inputmode="tel" placeholder="600 000 000" enterkeyhint="next" required></label>
+              <label class="field q-field" data-q="edad"><span class="q-label"><i class="q-ok" aria-hidden="true"></i>Edad</span><input id="f-edad" name="edad" type="number" inputmode="numeric" min="14" max="99" placeholder="Ej. 24" enterkeyhint="done" required></label>
+              <div class="field q-field field-full" data-q="sexo">
+                <p class="q-label"><i class="q-ok" aria-hidden="true"></i>Sexo</p>
+                <div class="chips chips-3" role="radiogroup">
+                  <label><input type="radio" name="sexo" value="Hombre"><span>Hombre</span></label>
+                  <label><input type="radio" name="sexo" value="Mujer"><span>Mujer</span></label>
+                  <label><input type="radio" name="sexo" value="Prefiero no decirlo"><span>Prefiero no decirlo</span></label>
+                </div>
+              </div>
+              <p class="fields-group field-full"><span>2</span> Tu imagen <small>· toca una opción</small></p>
+              <div class="field q-field field-full" data-q="tema">
+                <p class="q-label"><i class="q-ok" aria-hidden="true"></i>¿Con qué te ayudo?</p>
+                <div class="chips chips-2" role="radiogroup">
+                  <label><input type="radio" name="tema" value="Vestimenta" checked><span>Vestimenta</span></label>
+                  <label><input type="radio" name="tema" value="Colorimetría"><span>Colorimetría</span></label>
+                  <label><input type="radio" name="tema" value="Barbería: corte, barba y cejas"><span>Barbería · corte, barba y cejas</span></label>
+                  <label><input type="radio" name="tema" value="Cambio de imagen completo"><span>Cambio de imagen completo</span></label>
+                </div>
+              </div>
+              <div class="field q-field field-full" data-q="estilo">
+                <p class="q-label"><i class="q-ok" aria-hidden="true"></i>¿Qué estilo quieres transmitir?</p>
+                <div class="chips chips-2" role="radiogroup">
+                  <label><input type="radio" name="estilo" value="Clásico / elegante"><span>Clásico · elegante</span></label>
+                  <label><input type="radio" name="estilo" value="Arreglado pero informal"><span>Arreglado pero informal</span></label>
+                  <label><input type="radio" name="estilo" value="Streetwear"><span>Streetwear</span></label>
+                  <label><input type="radio" name="estilo" value="Deportivo / chándal"><span>Deportivo · chándal</span></label>
+                  <label><input type="radio" name="estilo" value="Minimalista"><span>Minimalista</span></label>
+                  <label><input type="radio" name="estilo" value="No lo sé, quiero que me aconsejes"><span>No lo sé, aconséjame</span></label>
+                </div>
+              </div>
+              <div class="field q-field field-full" data-q="presupuesto">
+                <p class="q-label"><i class="q-ok" aria-hidden="true"></i>¿Cuánto quieres invertir en tu imagen?</p>
+                <div class="chips chips-4" role="radiogroup">
+                  <label><input type="radio" name="presupuesto" value="Menos de 50 €"><span>Menos de 50 €</span></label>
+                  <label><input type="radio" name="presupuesto" value="50 – 100 €"><span>50 – 100 €</span></label>
+                  <label><input type="radio" name="presupuesto" value="100 – 200 €"><span>100 – 200 €</span></label>
+                  <label><input type="radio" name="presupuesto" value="200 – 500 €"><span>200 – 500 €</span></label>
+                  <label><input type="radio" name="presupuesto" value="500 – 1000 €"><span>500 – 1000 €</span></label>
+                  <label><input type="radio" name="presupuesto" value="1000 – 3000 €"><span>1000 – 3000 €</span></label>
+                  <label><input type="radio" name="presupuesto" value="Más de 3000 €"><span>Más de 3000 €</span></label>
+                  <label><input type="radio" name="presupuesto" value="Aún no lo sé"><span>Aún no lo sé</span></label>
+                </div>
+              </div>
+              <div class="field q-field field-full" data-q="modalidad">
+                <p class="q-label"><i class="q-ok" aria-hidden="true"></i>Después de la videollamada, ¿cómo prefieres la asesoría?</p>
+                <div class="chips chips-2" role="radiogroup">
                   <label><input type="radio" name="modalidad" value="Online" checked><span>Online</span></label>
                   <label><input type="radio" name="modalidad" value="En persona (Cádiz)"><span>En persona · Cádiz</span></label>
                 </div>
-              </fieldset>
-              <label class="consent field-full"><input type="checkbox" id="f-consent" required><span>Acepto que Jano Arribas Díaz use estos datos solo para contactarme sobre la cita.</span></label>
+              </div>
             </div>
             <p class="form-error" id="form-error" role="alert" hidden></p>
-            <button type="submit" class="btn btn-light btn-block" id="submit">Reservar cita gratis</button>
+            <p class="consent-note">Al reservar aceptas que Jano Arribas Díaz use estos datos solo para contactarte sobre la cita.</p>
+            <div class="submit-wrap">
+              <button type="submit" class="btn btn-light btn-block" id="submit">Reservar cita gratis</button>
+            </div>
           </form>
 
           <!-- Step 3: done -->
