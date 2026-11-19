@@ -30,7 +30,7 @@ Usa este documento como contexto para ayudarme con contenido, vídeos, ideas, te
 2. Después, la asesoría de pago:
    - **Online:** videollamada y seguimiento por WhatsApp.
    - **En persona, solo en Cádiz:** vamos de compras juntos y revisamos su armario.
-- Aún **no tengo precios públicos**. En el formulario pregunto el presupuesto: menos de 50 €, 50–100 €, 100–200 €, 200–500 €, 500–1000 €, 1000–3000 € y más de 3000 €.
+- Aún **no tengo precios públicos**. En el formulario pregunto el presupuesto: 100–200 €, 200–500 €, 500–1000 €, 1000–3000 €, 3000–5000 €, 5000–10 000 € y más de 10 000 € (mínimo 100 €, sin opción «no lo sé»).
 - Horario de citas: **lunes a jueves, de 15:30 a 20:30**, con huecos cada media hora (la videollamada dura 20 minutos).
 
 ## Mi web

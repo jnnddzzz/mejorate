@@ -506,3 +506,4 @@ h1 { font-family: var(--serif); font-weight: 400; font-size: clamp(56px, 7.4vw, 
 @media (max-width: 520px) { .booker-steps li span { display: inline-grid; } .how-mini { font-size: 12.5px; } }
 .about-cta { margin-top: 26px; }
 @media (max-width: 520px) { .booker-steps { gap: 6px; } .booker-steps li { font-size: 10px; letter-spacing: .06em; gap: 6px; } .booker-steps li span { width: 18px; height: 18px; font-size: 10px; } }
+@media (max-width: 760px) { .chips-2 > label:last-child:nth-child(odd), .chips-4 > label:last-child:nth-child(odd) { grid-column: 1 / -1; } }
