@@ -22,28 +22,31 @@ Guarda cada reserva en un panel online y te manda un email con cada una. Gratis 
 
 Puedes ver todas las reservas en tu panel de Formspree y exportarlas a Excel (CSV).
 
-## Google Sheets (hoja «Mejórate · Reservas» en tu Drive)
+## Google Sheets + Google Calendar (hoja «Mejórate · Reservas»)
 
-La hoja ya existe en tu Drive con las columnas puestas. Para conectarla:
+Con el código de `apps-script/Codigo.gs`, cada reserva:
+1. Se añade a la hoja.
+2. La hoja se ordena sola por **día y hora de la cita** (columna «Cita», la más próxima arriba).
+3. Se crea la cita en tu **Google Calendar** («Videollamada · Nombre», con sus datos y un enlace a su WhatsApp) y te avisa en el móvil **1 hora y 10 minutos antes**.
 
-1. Abre la hoja **Mejórate · Reservas** en Google Drive (desde el ordenador es más fácil).
-2. Menú **Extensiones → Apps Script**. Borra lo que haya y pega esto:
-   ```js
-   function doPost(e) {
-     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
-     const cols = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
-     sheet.appendRow(cols.map(c => e.parameter[c] || ""));
-     return ContentService.createTextOutput("ok");
-   }
-   ```
-3. Pulsa el icono de guardar (💾).
-4. Arriba a la derecha: **Implementar → Nueva implementación**. En el engranaje elige **Aplicación web**.
-   - Ejecutar como: **Yo**
-   - Quién tiene acceso: **Cualquier usuario**
-5. Pulsa **Implementar**, acepta los permisos (Google avisará de que la app no está verificada: «Configuración avanzada» → «Ir a … (no seguro)», es tu propio script).
-6. Copia la **URL de la aplicación web** (termina en `/exec`) y ponla en `sheetsEndpoint` de `js/main.js`.
+### Instalarlo o actualizarlo (desde el ordenador, 5 minutos)
 
-Cada reserva añade una fila con Estado «Pendiente». Cuando confirmes la cita, cámbialo a «Confirmada».
+1. Abre la hoja **Mejórate · Reservas** → menú **Extensiones → Apps Script**.
+2. Borra todo lo que hay en `Código.gs` y pega el contenido entero de `apps-script/Codigo.gs`. Pulsa guardar (💾).
+3. **Configuración del proyecto** (engranaje ⚙️ a la izquierda) → Zona horaria: **(GMT+01:00) Madrid**.
+4. Vuelve al editor, elige la función **prepararHoja** en el desplegable de arriba y pulsa **▶ Ejecutar**. Acepta los permisos (hoja y Calendar). Si Google avisa de que la app no está verificada: «Configuración avanzada» → «Ir a … (no seguro)», es tu propio script. Esto añade la columna «Cita» y ordena las reservas que ya tenías.
+5. Opcional: ejecuta **pasarCitasAlCalendario** para meter en tu Calendar las citas futuras que ya estaban en la hoja.
+6. **Muy importante:** **Implementar → Gestionar implementaciones** → lápiz ✏️ → Versión: **Nueva versión** → **Implementar**. Así la URL `/exec` sigue siendo la misma y la web no hay que tocarla. (Si haces «Nueva implementación» sale otra URL y habría que cambiar `sheetsEndpoint` en `js/main.js`.)
+
+### Primera instalación (si no existiera aún la implementación)
+
+**Implementar → Nueva implementación** → tipo **Aplicación web** · Ejecutar como: **Yo** · Acceso: **Cualquier usuario**. Copia la URL `/exec` y ponla en `sheetsEndpoint` de `js/main.js`.
+
+### Avisos
+
+- **En cuanto alguien reserva:** te llega el email de Formspree (y, si activas las notificaciones de Google Calendar en el móvil, la cita aparece en tu calendario al momento).
+- **Antes de cada cita:** aviso de Google Calendar 1 h y 10 min antes (se cambia en `AVISOS_MIN`).
+- En la hoja, cambia **Estado** a «Confirmada» o «Cancelada». Si cancelas, borra también el evento del Calendar.
 
 ## Cambiar el horario
 
