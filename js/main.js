@@ -12,7 +12,12 @@ const CONFIG = {
   // Horario de citas: días (1 = lunes … 5 = viernes, 6 = sábado, 0 = domingo), franja y duración.
   horario: { dias: [1, 2, 3, 4], inicio: "15:30", fin: "20:30", minutos: 30 },
   diasVista: 45,             // Cuántos días hacia delante se puede reservar
-  avisoMinimoHoras: 3        // Antelación mínima para reservar
+  avisoMinimoHoras: 3,       // Antelación mínima para reservar
+
+  // Días que no atiendes (vacaciones, imprevistos): "AAAA-MM-DD"
+  diasCerrados: ["2026-11-23"],
+  // Horas sueltas que quieres bloquear a mano: "AAAA-MM-DD HH:MM"
+  horasBloqueadas: ["2026-11-24 16:30", "2026-11-24 17:00"]
 };
 
 // ==== FOTOS ====
@@ -357,10 +362,12 @@ const pad2 = n => String(n).padStart(2, "0");
 const slotKey = (date, t) => `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())} ${t}`;
 const slotsFor = date => {
   if (date < today || date > lastDay || !CONFIG.horario.dias.includes(date.getDay())) return [];
+  if ((CONFIG.diasCerrados || []).includes(slotKey(date, "").trim())) return [];
   const earliest = Date.now() + CONFIG.avisoMinimoHoras * 3600e3;
   return ALL_SLOTS.filter(t => {
     const d = new Date(date); d.setHours(0, toMin(t), 0, 0);
-    return d.getTime() >= earliest && !busy.has(slotKey(date, t));
+    const k = slotKey(date, t);
+    return d.getTime() >= earliest && !busy.has(k) && !(CONFIG.horasBloqueadas || []).includes(k);
   });
 };
 // JSONP so it works from any domain without CORS; resolves to null if the sheet can't be reached.

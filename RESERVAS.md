@@ -51,6 +51,9 @@ Con el código de `apps-script/Codigo.gs`, cada reserva:
 
 ## Cambiar el horario
 
+Para no atender un día concreto, añádelo a `diasCerrados` en `js/main.js` (por ejemplo `"2026-11-23"`). Para bloquear una hora suelta, añádela a `horasBloqueadas` (`"2026-11-24 17:00"`).
+
+
 En `js/main.js`, bloque `horario`: cada número es un día (0 = domingo, 1 = lunes … 6 = sábado) con sus horas libres. Para cerrar un día, bórralo de la lista. `diasVista` marca cuántos días hacia delante se puede reservar y `avisoMinimoHoras` la antelación mínima.
 
 Las horas ya reservadas en la hoja se bloquean solas en la web (función `doGet` de `apps-script/Codigo.gs`). Si el código de la hoja no está actualizado, la web sigue funcionando pero sin bloquear horas.
