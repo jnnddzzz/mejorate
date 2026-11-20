@@ -28,6 +28,7 @@ Con el código de `apps-script/Codigo.gs`, cada reserva:
 1. Se añade a la hoja.
 2. La hoja se ordena sola por **día y hora de la cita** (columna «Cita», la más próxima arriba).
 3. Se crea la cita en tu **Google Calendar** («Videollamada · Nombre», con sus datos y un enlace a su WhatsApp) y te avisa en el móvil **1 hora y 10 minutos antes**.
+4. **Bloquea esa hora en la web**: nadie más puede elegirla. Si alguien la coge mientras otra persona rellena sus datos, a esa persona se le avisa y elige otra hora. Para liberar una hora, pon «Cancelada» en Estado. A la web solo le llegan días y horas, nunca nombres ni teléfonos.
 
 ### Instalarlo o actualizarlo (desde el ordenador, 5 minutos)
 
@@ -52,4 +53,4 @@ Con el código de `apps-script/Codigo.gs`, cada reserva:
 
 En `js/main.js`, bloque `horario`: cada número es un día (0 = domingo, 1 = lunes … 6 = sábado) con sus horas libres. Para cerrar un día, bórralo de la lista. `diasVista` marca cuántos días hacia delante se puede reservar y `avisoMinimoHoras` la antelación mínima.
 
-Ten en cuenta que el calendario no sabe qué horas ya están reservadas: dos personas podrían elegir la misma. Por eso confirmas tú cada cita por WhatsApp.
+Las horas ya reservadas en la hoja se bloquean solas en la web (función `doGet` de `apps-script/Codigo.gs`). Si el código de la hoja no está actualizado, la web sigue funcionando pero sin bloquear horas.

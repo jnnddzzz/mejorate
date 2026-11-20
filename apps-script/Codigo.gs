@@ -6,6 +6,10 @@
  *  1. Añade la fila a la hoja.
  *  2. Ordena la hoja por día y hora de la cita (la más próxima arriba).
  *  3. Crea la cita en tu Google Calendar con avisos en el móvil antes de la videollamada.
+ *  4. Le dice a la web qué horas están ya cogidas, para que nadie más pueda reservarlas
+ *     (solo se envían día y hora, nunca nombres ni teléfonos).
+ *
+ * Para liberar una hora: pon «Cancelada» en la columna Estado.
  */
 
 // ----- Ajustes -----
@@ -22,6 +26,7 @@ function doPost(e) {
     const sheet = hoja_();
     const cols = prepararColumna_(sheet);
     const cuando = fechaCita_(p["Día"], p["Hora"]);
+    if (cuando && ocupadas_().includes(clave_(cuando))) p["Estado"] = "Hora repetida: revisar";
     sheet.appendRow(cols.map(c => c === COL_CITA ? (cuando || "") : (p[c] || "")));
     ordenar_(sheet);
     if (CREAR_EVENTO && cuando) crearEvento_(p, cuando);
@@ -29,6 +34,36 @@ function doPost(e) {
   } finally {
     lock.releaseLock();
   }
+}
+
+/** La web pregunta aquí qué horas están ocupadas. */
+function doGet(e) {
+  const out = JSON.stringify({ ocupadas: ocupadas_() });
+  const cb = String((e && e.parameter && e.parameter.callback) || "");
+  if (/^[A-Za-z_$][\w$]*$/.test(cb)) {
+    return ContentService.createTextOutput(cb + "(" + out + ");").setMimeType(ContentService.MimeType.JAVASCRIPT);
+  }
+  return ContentService.createTextOutput(out).setMimeType(ContentService.MimeType.JSON);
+}
+
+/** Días y horas futuros ya reservados (sin las canceladas), como «2026-11-23 16:00». */
+function ocupadas_() {
+  const sheet = hoja_();
+  const datos = sheet.getDataRange().getValues();
+  const cols = datos.shift();
+  const iDia = cols.indexOf("Día"), iHora = cols.indexOf("Hora"), iEstado = cols.indexOf("Estado");
+  const ahora = new Date();
+  const out = [];
+  datos.forEach(f => {
+    if (iEstado > -1 && /cancel/i.test(String(f[iEstado]))) return;
+    const d = fechaCita_(f[iDia], f[iHora]);
+    if (d && d > ahora) out.push(clave_(d));
+  });
+  return out;
+}
+
+function clave_(d) {
+  return Utilities.formatDate(d, Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm");
 }
 
 /** Ejecútala UNA vez a mano (botón ▶ Ejecutar) para preparar la hoja y dar permisos. */

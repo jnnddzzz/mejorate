@@ -351,11 +351,31 @@ const ALL_SLOTS = (() => {
 })();
 const today = new Date(); today.setHours(0, 0, 0, 0);
 const lastDay = new Date(today); lastDay.setDate(lastDay.getDate() + CONFIG.diasVista);
+// Times already booked (read from the Google Sheet) are hidden for everyone.
+let busy = new Set();
+const pad2 = n => String(n).padStart(2, "0");
+const slotKey = (date, t) => `${date.getFullYear()}-${pad2(date.getMonth() + 1)}-${pad2(date.getDate())} ${t}`;
 const slotsFor = date => {
   if (date < today || date > lastDay || !CONFIG.horario.dias.includes(date.getDay())) return [];
   const earliest = Date.now() + CONFIG.avisoMinimoHoras * 3600e3;
-  return ALL_SLOTS.filter(t => { const d = new Date(date); d.setHours(0, toMin(t), 0, 0); return d.getTime() >= earliest; });
+  return ALL_SLOTS.filter(t => {
+    const d = new Date(date); d.setHours(0, toMin(t), 0, 0);
+    return d.getTime() >= earliest && !busy.has(slotKey(date, t));
+  });
 };
+// JSONP so it works from any domain without CORS; resolves to null if the sheet can't be reached.
+let jsonpN = 0;
+const loadBusy = (timeout = 7000) => new Promise(resolve => {
+  if (!CONFIG.sheetsEndpoint) return resolve(null);
+  const cb = `__busy${Date.now()}${jsonpN++}`;
+  const tag = document.createElement("script");
+  const end = val => { clearTimeout(timer); delete window[cb]; tag.remove(); resolve(val); };
+  const timer = setTimeout(() => end(null), timeout);
+  window[cb] = data => end(data && Array.isArray(data.ocupadas) ? new Set(data.ocupadas) : null);
+  tag.onerror = () => end(null);
+  tag.src = `${CONFIG.sheetsEndpoint}?accion=ocupadas&callback=${cb}&t=${Date.now()}`;
+  document.head.appendChild(tag);
+});
 
 let viewMonth = new Date(today.getFullYear(), today.getMonth(), 1);
 const renderMonth = () => {
@@ -377,6 +397,8 @@ const renderMonth = () => {
 };
 const renderTimes = () => {
   const list = slotsFor(pick.date);
+  const hint = $(".times-list .step-hint");
+  if (hint) hint.innerHTML = "<b>↓</b> Toca una hora y sigues";
   $("#times-empty").hidden = true;
   $("#times-list").hidden = false;
   $("#chosen-day").textContent = cap(fmtLong.format(pick.date));
@@ -408,7 +430,8 @@ $$("[data-back]", booker).forEach(b => b.addEventListener("click", () => goStep(
 const fmtShort = new Intl.DateTimeFormat("es-ES", { weekday: "long", day: "numeric" });
 const tomorrow = new Date(today); tomorrow.setDate(tomorrow.getDate() + 1);
 const dayWord = d => d.getTime() === today.getTime() ? "Hoy" : d.getTime() === tomorrow.getTime() ? "Mañana" : cap(fmtShort.format(d));
-const nextSlots = (() => {
+let nextSlots = [];
+const computeNext = () => {
   const out = [];
   for (let d = new Date(today); d <= lastDay && out.length < 3; d.setDate(d.getDate() + 1)) {
     const list = slotsFor(d);
@@ -416,7 +439,7 @@ const nextSlots = (() => {
     if (list.length) out.push({ date: new Date(d), time: list[0] });
   }
   return out;
-})();
+};
 const bookSlot = sl => {
   viewMonth = new Date(sl.date.getFullYear(), sl.date.getMonth(), 1);
   chooseDay(new Date(sl.date));
@@ -426,21 +449,22 @@ const bookSlot = sl => {
   scrollTo({ top: booker.getBoundingClientRect().top + scrollY - 90, behavior: reduceMotion ? "auto" : "smooth" });
   setTimeout(() => $("#f-nombre").focus({ preventScroll: true }), 900);
 };
-if (nextSlots.length) {
+const renderNext = () => {
+  nextSlots = computeNext();
   const first = nextSlots[0];
-  $("#next-slot-text").textContent = `${dayWord(first.date).toLowerCase()} a las ${first.time}`;
-  $("#next-slot").hidden = false;
-  $("#next-slot").addEventListener("click", () => bookSlot(first));
+  $("#next-slot").hidden = !first;
+  if (first) $("#next-slot-text").textContent = `${dayWord(first.date).toLowerCase()} a las ${first.time}`;
   $("#consult-slots").innerHTML = nextSlots.map((sl, i) =>
     `<button type="button" class="consult-slot" data-i="${i}"><span>${dayWord(sl.date)}</span><b>${sl.time} →</b></button>`).join("");
-  $("#consult-slots").addEventListener("click", e => {
-    const b = e.target.closest(".consult-slot");
-    if (b) bookSlot(nextSlots[+b.dataset.i]);
-  });
-}
+};
+$("#next-slot").addEventListener("click", () => nextSlots[0] && bookSlot(nextSlots[0]));
+$("#consult-slots").addEventListener("click", e => {
+  const b = e.target.closest(".consult-slot");
+  if (b && nextSlots[+b.dataset.i]) bookSlot(nextSlots[+b.dataset.i]);
+});
 
 // open on the first day with free times
-(() => {
+const openFirstFree = () => {
   for (let d = new Date(today); d <= lastDay; d.setDate(d.getDate() + 1)) {
     if (slotsFor(d).length) {
       viewMonth = new Date(d.getFullYear(), d.getMonth(), 1);
@@ -449,7 +473,16 @@ if (nextSlots.length) {
     }
   }
   renderMonth();
-})();
+};
+// Redraw everything after the booked times change, keeping the chosen day if it still has room.
+const refreshAvailability = () => {
+  renderNext();
+  if (pick.date && slotsFor(pick.date).length) { renderMonth(); renderTimes(); }
+  else openFirstFree();
+};
+renderNext();
+openFirstFree();
+loadBusy().then(set => { if (set) { busy = set; refreshAvailability(); } });
 
 const form = $("#booking-form");
 const errorBox = $("#form-error");
@@ -526,6 +559,19 @@ form.addEventListener("submit", async e => {
   };
 
   submitBtn.disabled = true;
+  submitBtn.textContent = "Comprobando la hora…";
+  const fresh = await loadBusy(3500);
+  if (fresh) busy = fresh;
+  if (busy.has(slotKey(pick.date, pick.time))) {
+    submitBtn.disabled = false;
+    refreshForm();
+    refreshAvailability();
+    goStep(0);
+    booker.scrollIntoView({ behavior: "smooth", block: "start" });
+    const hint = $(".times-list .step-hint");
+    if (hint) hint.innerHTML = `<b>!</b> Las ${pick.time} se acaban de ocupar. Elige otra hora`;
+    return;
+  }
   submitBtn.textContent = "Enviando…";
   const toForm = extra => {
     const body = new FormData();
@@ -544,6 +590,8 @@ form.addEventListener("submit", async e => {
   ]);
   submitBtn.disabled = false;
   refreshForm();
+  busy.add(slotKey(pick.date, pick.time));
+  renderNext();
 
   const msg = [
     "Hola Jano, acabo de reservar mi videollamada gratis en tu web:",
