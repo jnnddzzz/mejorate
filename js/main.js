@@ -17,7 +17,7 @@ const CONFIG = {
   // Días que no atiendes (vacaciones, imprevistos): "AAAA-MM-DD"
   diasCerrados: ["2026-11-23"],
   // Horas sueltas que quieres bloquear a mano: "AAAA-MM-DD HH:MM"
-  horasBloqueadas: ["2026-11-24 16:30", "2026-11-24 17:00"]
+  horasBloqueadas: ["2026-11-24 16:30", "2026-11-24 17:00", "2026-11-25 19:00"]
 };
 
 // ==== FOTOS ====
