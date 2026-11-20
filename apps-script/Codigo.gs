@@ -3,13 +3,16 @@
  * Pega todo este archivo en la hoja «Mejórate · Reservas» → Extensiones → Apps Script (Código.gs).
  *
  * Cada vez que alguien reserva en la web:
- *  1. Añade la fila a la hoja.
+ *  1. Guarda en la hoja TODOS los datos del cliente.
  *  2. Ordena la hoja por día y hora de la cita (la más próxima arriba).
  *  3. Crea la cita en tu Google Calendar con avisos en el móvil antes de la videollamada.
  *  4. Le dice a la web qué horas están ya cogidas, para que nadie más pueda reservarlas
- *     (solo se envían día y hora, nunca nombres ni teléfonos).
+ *     (a la web solo le llegan día y hora, nunca nombres ni teléfonos).
  *
  * Para liberar una hora: pon «Cancelada» en la columna Estado.
+ *
+ * Las fechas se leen tal y como se ven en la hoja (16/11/2026 y 16:30),
+ * así que da igual la zona horaria de la hoja.
  */
 
 // ----- Ajustes -----
@@ -17,19 +20,20 @@ const DURACION_MIN = 20;          // lo que dura la videollamada
 const AVISOS_MIN = [60, 10];      // avisos en el móvil: 1 hora antes y 10 minutos antes
 const CREAR_EVENTO = true;        // false si no quieres que se cree en Google Calendar
 const COL_CITA = "Cita";          // columna con día y hora juntos (la crea sola)
+const TITULO_EVENTO = "Videollamada · ";
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
-    const p = e.parameter;
+    const p = Object.assign({}, e.parameter);
     const sheet = hoja_();
     const cols = prepararColumna_(sheet);
-    const cuando = fechaCita_(p["Día"], p["Hora"]);
-    if (cuando && ocupadas_().includes(clave_(cuando))) p["Estado"] = "Hora repetida: revisar";
-    sheet.appendRow(cols.map(c => c === COL_CITA ? (cuando || "") : (p[c] || "")));
+    const cita = leerCita_(p["Día"], p["Hora"]);
+    if (cita && ocupadas_().includes(cita.clave)) p["Estado"] = "Hora repetida: revisar";
+    sheet.appendRow(cols.map(c => c === COL_CITA ? (cita ? cita.texto : "") : (p[c] || "")));
     ordenar_(sheet);
-    if (CREAR_EVENTO && cuando) crearEvento_(p, cuando);
+    if (CREAR_EVENTO && cita) crearEvento_(p, cita.fecha);
     return ContentService.createTextOutput("ok");
   } finally {
     lock.releaseLock();
@@ -46,45 +50,27 @@ function doGet(e) {
   return ContentService.createTextOutput(out).setMimeType(ContentService.MimeType.JSON);
 }
 
-/** Días y horas futuros ya reservados (sin las canceladas), como «2026-11-23 16:00». */
-function ocupadas_() {
-  const sheet = hoja_();
-  const datos = sheet.getDataRange().getValues();
-  const cols = datos.shift();
-  const iDia = cols.indexOf("Día"), iHora = cols.indexOf("Hora"), iEstado = cols.indexOf("Estado");
-  const ahora = new Date();
-  const out = [];
-  datos.forEach(f => {
-    if (iEstado > -1 && /cancel/i.test(String(f[iEstado]))) return;
-    const d = fechaCita_(f[iDia], f[iHora]);
-    if (d && d > ahora) out.push(clave_(d));
-  });
-  return out;
-}
-
-function clave_(d) {
-  return Utilities.formatDate(d, Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm");
-}
-
-/** Ejecútala UNA vez a mano (botón ▶ Ejecutar) para preparar la hoja y dar permisos. */
+/** Ejecútala a mano (▶ Ejecutar): crea/recalcula la columna «Cita», ordena y pide permisos. */
 function prepararHoja() {
   const sheet = hoja_();
-  prepararColumna_(sheet);
+  prepararColumna_(sheet, true);
   ordenar_(sheet);
   CalendarApp.getDefaultCalendar(); // pide el permiso de Calendar ahora y no en la primera reserva
+  Logger.log("Horas ocupadas que verá la web: " + ocupadas_().join(", "));
 }
 
-/** Opcional: pasa a tu Calendar las citas futuras que ya estaban en la hoja. */
-function pasarCitasAlCalendario() {
-  const sheet = hoja_();
-  const cols = prepararColumna_(sheet);
-  const filas = sheet.getDataRange().getValues().slice(1);
+/**
+ * Borra de tu Calendar las videollamadas futuras creadas por este código
+ * y las vuelve a crear desde la hoja (con la hora buena). Puedes ejecutarla cuando quieras.
+ */
+function rehacerCalendario() {
+  const cal = CalendarApp.getDefaultCalendar();
   const ahora = new Date();
-  filas.forEach(f => {
-    const fila = {};
-    cols.forEach((c, i) => fila[c] = f[i]);
-    const cuando = fila[COL_CITA];
-    if (cuando instanceof Date && cuando > ahora && fila["Estado"] !== "Cancelada") crearEvento_(fila, cuando);
+  const hasta = new Date(ahora.getTime() + 400 * 864e5);
+  const desde = new Date(ahora.getTime() - 7 * 864e5);
+  cal.getEvents(desde, hasta).forEach(ev => { if (ev.getTitle().indexOf(TITULO_EVENTO) === 0) ev.deleteEvent(); });
+  filas_().forEach(f => {
+    if (f.cita && f.cita.fecha > ahora && !cancelada_(f.datos["Estado"])) crearEvento_(f.datos, f.cita.fecha);
   });
 }
 
@@ -94,27 +80,48 @@ function hoja_() {
   return SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
 }
 
-/** Se asegura de que existe la columna «Cita» (la primera) y la rellena en las filas antiguas. */
-function prepararColumna_(sheet) {
+function cancelada_(estado) {
+  return /cancel/i.test(String(estado || ""));
+}
+
+/** Todas las filas como texto (tal y como se ven) con su cita ya calculada. */
+function filas_() {
+  const sheet = hoja_();
+  const vals = sheet.getDataRange().getDisplayValues();
+  const cols = vals.shift();
+  return vals.map(f => {
+    const datos = {};
+    cols.forEach((c, i) => datos[c] = f[i]);
+    return { datos: datos, cita: leerCita_(datos["Día"], datos["Hora"]) };
+  });
+}
+
+/** Se asegura de que existe la columna «Cita» (la primera). Con rehacer=true la recalcula entera. */
+function prepararColumna_(sheet, rehacer) {
   let cols = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  let nueva = false;
   if (!cols.includes(COL_CITA)) {
     sheet.insertColumnBefore(1);
     sheet.getRange(1, 1).setValue(COL_CITA).setFontWeight("bold");
     cols = [COL_CITA].concat(cols);
-    const n = sheet.getLastRow() - 1;
-    if (n > 0) {
-      const iDia = cols.indexOf("Día"), iHora = cols.indexOf("Hora");
-      const datos = sheet.getRange(2, 1, n, cols.length).getValues();
-      sheet.getRange(2, 1, n, 1).setValues(datos.map(f => [fechaCita_(f[iDia], f[iHora]) || ""]));
-    }
+    nueva = true;
   }
   const col = cols.indexOf(COL_CITA) + 1;
-  sheet.getRange(2, col, Math.max(sheet.getMaxRows() - 1, 1), 1).setNumberFormat("ddd dd/mm/yyyy · HH:mm");
+  sheet.getRange(1, col, sheet.getMaxRows(), 1).setNumberFormat("@"); // texto: no lo toca la zona horaria
+  const n = sheet.getLastRow() - 1;
+  if ((nueva || rehacer) && n > 0) {
+    const vals = sheet.getRange(2, 1, n, cols.length).getDisplayValues();
+    const iDia = cols.indexOf("Día"), iHora = cols.indexOf("Hora");
+    sheet.getRange(2, col, n, 1).setValues(vals.map(f => {
+      const c = leerCita_(f[iDia], f[iHora]);
+      return [c ? c.texto : ""];
+    }));
+  }
   sheet.setFrozenRows(1);
   return cols;
 }
 
-/** Ordena por la columna «Cita»: la cita más próxima arriba. */
+/** Ordena por la columna «Cita» (texto «2026-11-23 16:00 · lun»): la cita más próxima arriba. */
 function ordenar_(sheet) {
   const n = sheet.getLastRow() - 1;
   if (n < 2) return;
@@ -122,31 +129,38 @@ function ordenar_(sheet) {
   sheet.getRange(2, 1, n, cols.length).sort({ column: cols.indexOf(COL_CITA) + 1, ascending: true });
 }
 
-/** «19/11/2026» (o una fecha) + «15:30» → fecha con hora. */
-function fechaCita_(dia, hora) {
-  if (!dia || !hora) return null;
-  let d;
-  if (dia instanceof Date) {
-    d = new Date(dia.getFullYear(), dia.getMonth(), dia.getDate());
-  } else {
-    const m = String(dia).match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-    if (!m) return null;
-    d = new Date(+m[3], +m[2] - 1, +m[1]);
-  }
-  let h, min;
-  if (hora instanceof Date) { h = hora.getHours(); min = hora.getMinutes(); }
-  else {
-    const t = String(hora).match(/(\d{1,2}):(\d{2})/);
-    if (!t) return null;
-    h = +t[1]; min = +t[2];
-  }
-  d.setHours(h, min, 0, 0);
-  return d;
+/** Días y horas futuros ya reservados (sin las canceladas), como «2026-11-23 16:00». */
+function ocupadas_() {
+  const ahora = new Date();
+  const out = [];
+  filas_().forEach(f => {
+    if (!f.cita || cancelada_(f.datos["Estado"])) return;
+    if (f.cita.fecha > ahora && out.indexOf(f.cita.clave) === -1) out.push(f.cita.clave);
+  });
+  return out;
+}
+
+/**
+ * «23/11/2026» + «16:00» →
+ *   clave «2026-11-23 16:00» (la que usa la web),
+ *   texto «2026-11-23 16:00 · lun» (columna Cita, se ordena bien),
+ *   fecha (para Calendar, en la zona horaria del script: Madrid).
+ */
+function leerCita_(dia, hora) {
+  const m = String(dia || "").match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  const t = String(hora || "").match(/(\d{1,2}):(\d{2})/);
+  if (!m || !t) return null;
+  const p2 = n => ("0" + n).slice(-2);
+  const clave = m[3] + "-" + p2(m[2]) + "-" + p2(m[1]) + " " + p2(t[1]) + ":" + t[2];
+  const fecha = Utilities.parseDate(clave, Session.getScriptTimeZone(), "yyyy-MM-dd HH:mm");
+  const dias = ["dom", "lun", "mar", "mié", "jue", "vie", "sáb"];
+  const diaSemana = dias[new Date(+m[3], +m[2] - 1, +m[1]).getDay()];
+  return { clave: clave, texto: clave + " · " + diaSemana, fecha: fecha };
 }
 
 function crearEvento_(p, inicio) {
   const fin = new Date(inicio.getTime() + DURACION_MIN * 60000);
-  const nombre = p["Nombre"] || "Cliente";
+  const nombre = String(p["Nombre"] || "Cliente").trim();
   const tel = String(p["Teléfono"] || "").replace(/\D/g, "");
   const wa = tel ? "https://wa.me/" + (tel.length === 9 ? "34" + tel : tel) : "";
   const descripcion = [
@@ -159,8 +173,8 @@ function crearEvento_(p, inicio) {
     "Estilo: " + (p["Estilo que quiere transmitir"] || ""),
     "Presupuesto: " + (p["Presupuesto"] || ""),
     "Después: " + (p["Asesoría después"] || "")
-  ].filter(l => l !== null).join("\n");
-  const ev = CalendarApp.getDefaultCalendar().createEvent("Videollamada · " + nombre, inicio, fin, { description: descripcion });
+  ].join("\n");
+  const ev = CalendarApp.getDefaultCalendar().createEvent(TITULO_EVENTO + nombre, inicio, fin, { description: descripcion });
   ev.removeAllReminders();
   AVISOS_MIN.forEach(m => ev.addPopupReminder(m));
   ev.setColor(CalendarApp.EventColor.MAUVE);

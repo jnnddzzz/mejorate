@@ -35,8 +35,8 @@ Con el código de `apps-script/Codigo.gs`, cada reserva:
 1. Abre la hoja **Mejórate · Reservas** → menú **Extensiones → Apps Script**.
 2. Borra todo lo que hay en `Código.gs` y pega el contenido entero de `apps-script/Codigo.gs`. Pulsa guardar (💾).
 3. **Configuración del proyecto** (engranaje ⚙️ a la izquierda) → Zona horaria: **(GMT+01:00) Madrid**.
-4. Vuelve al editor, elige la función **prepararHoja** en el desplegable de arriba y pulsa **▶ Ejecutar**. Acepta los permisos (hoja y Calendar). Si Google avisa de que la app no está verificada: «Configuración avanzada» → «Ir a … (no seguro)», es tu propio script. Esto añade la columna «Cita» y ordena las reservas que ya tenías.
-5. Opcional: ejecuta **pasarCitasAlCalendario** para meter en tu Calendar las citas futuras que ya estaban en la hoja.
+4. Vuelve al editor, elige la función **prepararHoja** en el desplegable de arriba y pulsa **▶ Ejecutar**. Acepta los permisos (hoja y Calendar). Si Google avisa de que la app no está verificada: «Configuración avanzada» → «Ir a … (no seguro)», es tu propio script. Esto crea (o recalcula) la columna «Cita» y ordena las reservas que ya tenías. En «Registro de ejecución» verás las horas ocupadas que va a bloquear la web.
+5. Ejecuta **rehacerCalendario**: borra de tu Calendar las videollamadas futuras creadas por el código y las vuelve a crear desde la hoja con la hora correcta. Puedes ejecutarla siempre que quieras.
 6. **Muy importante:** **Implementar → Gestionar implementaciones** → lápiz ✏️ → Versión: **Nueva versión** → **Implementar**. Así la URL `/exec` sigue siendo la misma y la web no hay que tocarla. (Si haces «Nueva implementación» sale otra URL y habría que cambiar `sheetsEndpoint` en `js/main.js`.)
 
 ### Primera instalación (si no existiera aún la implementación)
